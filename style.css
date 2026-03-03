@@ -1,0 +1,220 @@
+/* Variáveis de Cores LembreMED */
+:root {
+    --cor-verde: #0D7A47;     /* Verde LembreMed */
+    --cor-vermelho: #E33F31;  /* Vermelho LembreMed */
+    
+    --primaria: var(--cor-verde);
+    --secundaria: var(--cor-vermelho);
+    --fundo: #FFFFFF;
+    --texto: #333333;
+    --branco: #FFFFFF;
+    
+    /* Cores de Hover (mais escuras para feedback visual) */
+    --primaria-escura: #0A5F36;
+    --secundaria-escura: #C63124;
+}
+
+/* Configurações Globais */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--fundo);
+    color: var(--texto);
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabeçalho */
+header {
+    background-color: var(--primaria); /* Verde LembreMed */
+    color: var(--branco);
+    text-align: center;
+    padding: 2.5rem 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.8rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+header p {
+    margin: 0;
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Menu de Navegação */
+nav {
+    background-color: var(--secundaria); /* Vermelho LembreMed */
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Permite quebrar linha no celular */
+}
+
+nav a {
+    display: block;
+    padding: 18px 25px;
+    color: var(--branco);
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+nav a:hover {
+    background-color: var(--secundaria-escura); /* Vermelho Escuro LembreMed */
+}
+
+/* Corpo Principal */
+main {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 0 25px;
+}
+
+/* Estilo dos Cartões (Sections) */
+section {
+    background: var(--branco);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 35px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+    border: 1px solid #f0f0f0;
+}
+
+h2 {
+    color: var(--primaria); /* Verde LembreMed */
+    border-bottom: 2px solid #eee;
+    padding-bottom: 12px;
+    margin-top: 0;
+    font-size: 1.8rem;
+}
+
+/* Formulários */
+label {
+    font-weight: 600;
+    color: #444;
+    display: block;
+    margin-top: 15px;
+}
+
+input[type="text"], 
+input[type="email"], 
+input[type="tel"], 
+input[type="number"], 
+input[type="time"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box; /* Impede que o campo vaze da tela */
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+legend {
+    font-weight: bold;
+    color: var(--primaria); /* Verde LembreMed */
+    padding: 0 8px;
+    font-size: 1.1rem;
+}
+
+/* Escondendo os <br> excessivos pois o CSS já faz o espaçamento */
+form br {
+    display: none; 
+}
+
+/* Botões */
+button {
+    background-color: var(--primaria); /* Verde LembreMed */
+    color: var(--branco);
+    border: none;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 25px;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: var(--primaria-escura); /* Verde Escuro LembreMed */
+}
+
+button:active {
+    transform: translateY(1px); /* Feedback tátil de clique */
+}
+
+/* Ajuste do form de busca para ficar na mesma linha */
+#busca form {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+#busca input {
+    margin-top: 0;
+    flex-grow: 1;
+}
+
+#busca button {
+    width: auto;
+    margin-top: 0;
+    padding: 12px 20px;
+}
+
+/* Listas (Painel e Histórico) */
+ul {
+    line-height: 1.7;
+    padding-left: 1.5rem;
+}
+
+#historico ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#historico li {
+    padding: 15px 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#historico li:last-child {
+    border-bottom: none;
+}
+
+#historico strong {
+    color: var(--primaria);
+}
+
+/* Rodapé */
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #888;
+    font-size: 0.95rem;
+    margin-top: 50px;
+    border-top: 1px solid #eee;
+}
