@@ -173,6 +173,11 @@ button:active {
 
 #busca input {
     margin-top: 0;
+input[type="email"], 
+input[type="tel"], 
+input[type="number"], 
+input[type="time"] {
+    width: 100%;
     flex-grow: 1;
 }
 
@@ -218,3 +223,9 @@ footer {
     margin-top: 50px;
     border-top: 1px solid #eee;
 }
+
+
+}
+
+
+
