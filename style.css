@@ -226,6 +226,59 @@ footer {
 
 
 }
+/* =========================================
+   MEDIA QUERIES (DESIGN RESPONSIVO)
+   ========================================= */
 
+/* 1. TABLET (Telas menores que 1024px) */
+@media screen and (max-width: 1024px) {
+    main {
+        max-width: 90%; /* Deixa o conteúdo ocupar mais espaço na tela */
+    }
+}
+
+/* 2. MOBILE GRANDE / TABLET PEQUENO (Telas menores que 768px) */
+@media screen and (max-width: 768px) {
+    header h1 {
+        font-size: 2.2rem; /* Diminui o título principal */
+    }
+
+    nav a {
+        padding: 12px 15px; /* Diminui o botão do menu para caber melhor */
+        font-size: 0.95rem;
+    }
+
+    section {
+        padding: 20px 15px; /* Reduz o espaço interno dos cartões */
+    }
+}
+
+/* 3. MOBILE PEQUENO (Celulares menores que 480px) */
+@media screen and (max-width: 480px) {
+    header h1 {
+        font-size: 1.8rem; /* Título ainda menor para não quebrar a linha feio */
+    }
+
+    /* Transforma o menu em uma coluna empilhada */
+    nav ul {
+        flex-direction: column; 
+    }
+    
+    nav a {
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1); /* Linha divisória suave */
+    }
+
+    /* O form de busca que ficava lado a lado agora fica empilhado */
+    #busca form {
+        flex-direction: column;
+        align-items: stretch; /* Faz os itens esticarem 100% da largura */
+    }
+
+    #busca button {
+        width: 100%; /* Botão de busca ocupa a largura toda no celular */
+        margin-top: 10px;
+    }
+}
 
 
