@@ -224,7 +224,23 @@
             <div id="patientDetailsContent">
                 <!-- Populated by JS -->
             </div>
-            <button class="btn btn-outline" style="width: 100%; margin-top: 1.5rem;" onclick="closeModal('patientDetailsModal')">Fechar</button>
+            <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('patientDetailsModal')">Fechar</button>
+                <button id="btnDeletePatient" class="btn" style="flex: 1; background-color: #ff4d4d; color: white;" onclick="">Excluir Paciente</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmation -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal" style="max-width: 400px; text-align: center; padding: 2rem;">
+            <div style="font-size: 3.5rem; margin-bottom: 1rem;">⚠️</div>
+            <h3 id="confirmTitle" style="margin-bottom: 0.5rem; font-size: 1.4rem;">Tem certeza?</h3>
+            <p id="confirmMessage" style="color: var(--text-light); margin-bottom: 2rem; line-height: 1.5;">Esta ação não pode ser desfeita.</p>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-outline" style="flex: 1;" onclick="closeModal('confirmModal')">Cancelar</button>
+                <button id="btnConfirmAction" class="btn" style="flex: 1; background-color: #ff4d4d; color: white;">Sim, Excluir</button>
+            </div>
         </div>
     </div>
 

@@ -9,7 +9,7 @@ function checkAuth() {
     const user = JSON.parse(localStorage.getItem('lembremed_user'));
 
     if (logged !== 'true' || !user) {
-        if (!window.location.pathname.endsWith('login.html') && !window.location.pathname.endsWith('inscricao.html')) {
+        if (!window.location.pathname.endsWith('login.html') && !window.location.pathname.endsWith('cadastro.html')) {
             window.location.href = 'login.html';
         }
         return;
@@ -72,6 +72,17 @@ function openModal(modalId) {
 
 function closeModal(modalId) {
     document.getElementById(modalId).style.display = 'none';
+}
+
+function showConfirm(title, message, onConfirm) {
+    document.getElementById('confirmTitle').innerText = title;
+    document.getElementById('confirmMessage').innerText = message;
+    const btn = document.getElementById('btnConfirmAction');
+    btn.onclick = () => {
+        onConfirm();
+        closeModal('confirmModal');
+    };
+    openModal('confirmModal');
 }
 
 // --- Data Accessors ---
@@ -461,6 +472,35 @@ function showPatientDetails(patientId) {
     `;
     
     openModal('patientDetailsModal');
+    
+    const deleteBtn = document.getElementById('btnDeletePatient');
+    if (deleteBtn) {
+        deleteBtn.onclick = () => deletePatient(patientId);
+    }
+}
+
+function deletePatient(patientId) {
+    const patients = getPatients();
+    const patient = patients.find(p => p.id === patientId);
+    const name = patient ? patient.name : 'este paciente';
+
+    showConfirm(
+        'Excluir Paciente?',
+        `Tem certeza que deseja remover ${name} e todos os seus medicamentos? Esta ação é irreversível.`,
+        () => {
+            let currentPatients = getPatients();
+            currentPatients = currentPatients.filter(p => p.id !== patientId);
+            savePatients(currentPatients);
+            
+            let meds = getGlobalMeds();
+            meds = meds.filter(m => m.patientId !== patientId);
+            saveGlobalMeds(meds);
+            
+            closeModal('patientDetailsModal');
+            renderCaregiverDashboard();
+            showNotification('Paciente Removido', `${name} foi removido com sucesso.`, '🗑️');
+        }
+    );
 }
 
 function confirmMedCaregiver(event, medId) {
