@@ -1,282 +1,799 @@
-/* Variáveis de Cores LembreMED */
 :root {
-    --cor-verde: #0D7A47;     /* Verde LembreMed */
-    --cor-vermelho: #E33F31;  /* Vermelho LembreMed */
-    
-    --primaria: var(--cor-verde);
-    --secundaria: var(--cor-vermelho);
-    --fundo: #FFFFFF;
-    --texto: #333333;
-    --branco: #FFFFFF;
-    
-    /* Cores de Hover (mais escuras para feedback visual) */
-    --primaria-escura: #0A5F36;
-    --secundaria-escura: #C63124;
+    --primary: #0D7A47;
+    --primary-light: #E8F5E9;
+    --primary-dark: #065F35;
+    --alert: #E33F31;
+    --alert-light: #FFEBEE;
+    --bg: #F4F7F6;
+    --text: #2D3436;
+    --text-light: #636E72;
+    --white: #FFFFFF;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.1);
+    --border-radius: 20px;
+    --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-/* Configurações Globais */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--fundo);
-    color: var(--texto);
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-/* Cabeçalho */
-header {
-    background-color: var(--primaria); /* Verde LembreMed */
-    color: var(--branco);
+body {
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3 {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* Layout */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.8rem;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 1rem;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(13, 122, 71, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(13, 122, 71, 0.3);
+}
+
+.btn-large {
+    padding: 1.2rem 2rem;
+    font-size: 1.1rem;
+    width: 100%;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background-color: var(--alert);
+    color: var(--white);
+}
+
+/* Auth Pages (Login/Signup) */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(13, 122, 71, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(227, 63, 49, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, #F4F7F6 0%, #E8F5E9 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-page::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle at 50% 50%, rgba(13, 122, 71, 0.1) 0%, transparent 50%);
+    top: -25%;
+    left: -25%;
+    z-index: 0;
+    animation: glowMove 15s infinite alternate ease-in-out;
+}
+
+@keyframes glowMove {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(5%, 5%) scale(1.1); }
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 3rem;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    z-index: 1;
+    position: relative;
+}
+
+.auth-header {
     text-align: center;
-    padding: 2.5rem 1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 2.5rem;
 }
 
-header h1 {
-    margin: 0 0 10px 0;
-    font-size: 2.8rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+.auth-header h1 {
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
 }
 
-header p {
-    margin: 0;
-    font-size: 1.2rem;
-    opacity: 0.9;
+.auth-header p {
+    color: var(--text-light);
+    font-weight: 500;
 }
 
-/* Menu de Navegação */
-nav {
-    background-color: var(--secundaria); /* Vermelho LembreMed */
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.8rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border-radius: 16px;
+    border: 2px solid #F0F0F0;
+    background-color: #FBFBFB;
+    font-size: 1rem;
+    transition: var(--transition);
+    font-family: inherit;
+    color: var(--text);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: var(--white);
+    box-shadow: 0 0 0 5px rgba(13, 122, 71, 0.1);
+}
+
+/* Role Selector */
+.role-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+.role-box {
+    position: relative;
+    cursor: pointer;
+}
+
+.role-box input {
+    position: absolute;
+    opacity: 0;
+}
+
+.role-box span {
+    display: block;
+    padding: 1rem;
+    text-align: center;
+    border: 2px solid #F0F0F0;
+    border-radius: 16px;
+    font-weight: 700;
+    transition: var(--transition);
+    background: #FBFBFB;
+}
+
+.role-box input:checked + span {
+    border-color: var(--primary);
+    background-color: var(--primary-light);
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(13, 122, 71, 0.1);
+}
+
+/* Main App Layout */
+.app-header {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1.2rem 0;
+    box-shadow: var(--shadow);
     position: sticky;
     top: 0;
     z-index: 100;
+    border-bottom: 1px solid #F0F0F0;
 }
 
-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap; /* Permite quebrar linha no celular */
-}
-
-nav a {
-    display: block;
-    padding: 18px 25px;
-    color: var(--branco);
-    text-decoration: none;
-    font-weight: 600;
-    transition: background 0.3s ease;
-}
-
-nav a:hover {
-    background-color: var(--secundaria-escura); /* Vermelho Escuro LembreMed */
-}
-
-/* Corpo Principal */
-main {
-    max-width: 850px;
-    margin: 40px auto;
-    padding: 0 25px;
-}
-
-/* Estilo dos Cartões (Sections) */
-section {
-    background: var(--branco);
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 35px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
-    border: 1px solid #f0f0f0;
-}
-
-h2 {
-    color: var(--primaria); /* Verde LembreMed */
-    border-bottom: 2px solid #eee;
-    padding-bottom: 12px;
-    margin-top: 0;
-    font-size: 1.8rem;
-}
-
-/* Formulários */
-label {
-    font-weight: 600;
-    color: #444;
-    display: block;
-    margin-top: 15px;
-}
-
-input[type="text"], 
-input[type="email"], 
-input[type="tel"], 
-input[type="number"], 
-input[type="time"] {
-    width: 100%;
-    padding: 12px 15px;
-    margin-top: 8px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-sizing: border-box; /* Impede que o campo vaze da tela */
-    font-family: inherit;
-    font-size: 1rem;
-}
-
-fieldset {
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-legend {
-    font-weight: bold;
-    color: var(--primaria); /* Verde LembreMed */
-    padding: 0 8px;
-    font-size: 1.1rem;
-}
-
-/* Escondendo os <br> excessivos pois o CSS já faz o espaçamento */
-form br {
-    display: none; 
-}
-
-/* Botões */
-button {
-    background-color: var(--primaria); /* Verde LembreMed */
-    color: var(--branco);
-    border: none;
-    padding: 15px 25px;
-    font-size: 1.1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    width: 100%;
-    margin-top: 25px;
-    transition: background 0.3s ease, transform 0.1s ease;
-}
-
-button:hover {
-    background-color: var(--primaria-escura); /* Verde Escuro LembreMed */
-}
-
-button:active {
-    transform: translateY(1px); /* Feedback tátil de clique */
-}
-
-/* Ajuste do form de busca para ficar na mesma linha */
-#busca form {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-#busca input {
-    margin-top: 0;
-input[type="email"], 
-input[type="tel"], 
-input[type="number"], 
-input[type="time"] {
-    width: 100%;
-    flex-grow: 1;
-}
-
-#busca button {
-    width: auto;
-    margin-top: 0;
-    padding: 12px 20px;
-}
-
-/* Listas (Painel e Histórico) */
-ul {
-    line-height: 1.7;
-    padding-left: 1.5rem;
-}
-
-#historico ul {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-#historico li {
-    padding: 15px 10px;
-    border-bottom: 1px solid #eee;
+.app-header .container {
+    padding-top: 0;
+    padding-bottom: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-#historico li:last-child {
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--primary);
+    text-decoration: none;
+    letter-spacing: -1px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Cards */
+.card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    transition: var(--transition);
+    border: 1px solid #F5F5F5;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+    border-color: #F0F0F0;
+}
+
+.card-title {
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Patient View - Highlights */
+.next-dose-card {
+    background: var(--white);
+    border-left: 10px solid var(--primary);
+    padding: 3rem;
+    text-align: center;
+}
+
+.next-dose-card h2 {
+    color: var(--text-light);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 1.2rem;
+}
+
+.med-name {
+    font-size: 3rem;
+    color: var(--text);
+    margin-bottom: 0.8rem;
+    font-weight: 900;
+}
+
+.med-info {
+    font-size: 1.4rem;
+    color: var(--text-light);
+    margin-bottom: 2.5rem;
+}
+
+/* Medication List */
+.med-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #F5F5F5;
+    transition: var(--transition);
+    border-radius: 16px;
+}
+
+.med-list-item:hover {
+    background-color: var(--primary-light);
+}
+
+.med-time {
+    font-weight: 800;
+    color: var(--primary);
+    min-width: 80px;
+    font-size: 1.2rem;
+}
+
+.med-details {
+    flex-grow: 1;
+    margin-left: 1.5rem;
+}
+
+.med-details h4 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+}
+
+.med-details p {
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+
+.med-status {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F0F0F0;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 1.4rem;
+}
+
+.med-status:hover {
+    background: #E0E0E0;
+    transform: scale(1.1);
+}
+
+.med-status.taken {
+    background: var(--primary);
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(13, 122, 71, 0.3);
+}
+
+/* Caregiver View - Dashboard */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.stat-value {
+    display: block;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--text-light);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.patient-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+/* Enhanced Patient Card */
+.patient-card {
+    position: relative;
+    overflow: hidden;
+    padding: 2.5rem;
+}
+
+.patient-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.patient-stat-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #F0F0F0;
+}
+
+.patient-mini-stat {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.patient-mini-stat strong {
+    display: block;
+    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin-top: 2px;
+}
+
+.progress-container {
+    height: 12px;
+    background: #F0F0F0;
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary) 0%, #2ecc71 100%);
+    border-radius: 6px;
+    transition: width 1.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+}
+
+.modal {
+    background: var(--white);
+    padding: 3rem;
+    border-radius: 32px;
+    width: 100%;
+    max-width: 550px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.close-modal {
+    background: #F0F0F0;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-light);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.close-modal:hover {
+    background: var(--alert-light);
+    color: var(--alert);
+    transform: rotate(90deg);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 1.5rem;
+    color: var(--text-light);
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.3;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Caregiver Sub-Navigation */
+.sub-nav {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 2.5rem;
+    background: #F0F0F0;
+    padding: 0.5rem;
+    border-radius: 18px;
+    width: fit-content;
+    overflow-x: auto;
+}
+
+.sub-nav-btn {
+    background: none;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-weight: 700;
+    color: var(--text-light);
+    cursor: pointer;
+    border-radius: 14px;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.sub-nav-btn.active {
+    background-color: var(--white);
+    color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.sub-nav-btn:hover:not(.active) {
+    background-color: rgba(255,255,255,0.5);
+    color: var(--text);
+}
+
+/* Charts & Dashboard Items */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+}
+
+.circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 180px;
+    max-height: 180px;
+}
+
+.circle-bg {
+    fill: none;
+    stroke: #F0F0F0;
+    stroke-width: 3.8;
+}
+
+.circle {
+    fill: none;
+    stroke-width: 3.2;
+    stroke-linecap: round;
+    animation: progress 1.5s ease-out forwards;
+}
+
+.circle.primary { stroke: var(--primary); }
+
+@keyframes progress {
+    0% { stroke-dasharray: 0 100; }
+}
+
+.percentage {
+    fill: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.55em;
+    text-anchor: middle;
+    font-weight: 800;
+}
+
+/* Multi-dose list for Dashboard */
+.next-doses-list {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.mini-dose-item {
+    padding: 1.2rem;
+    background: #FBFBFB;
+    border: 1px solid #F0F0F0;
+    border-radius: 18px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    transition: var(--transition);
+}
+
+.mini-dose-item:hover {
+    transform: translateX(8px);
+    border-color: var(--primary);
+    background-color: var(--white);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+}
+
+.mini-dose-info h4 { 
+    font-size: 1.1rem; 
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.mini-dose-info p { 
+    font-size: 0.9rem; 
+    color: var(--text-light); 
+    font-weight: 500;
+}
+
+/* History List */
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    padding: 1.2rem;
+    background: var(--white);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    border: 1px solid #F5F5F5;
+}
+
+.history-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.2rem;
+    font-size: 1.5rem;
+}
+
+.history-info h4 { font-size: 1.1rem; margin-bottom: 4px; }
+.history-info p { font-size: 0.9rem; color: var(--text-light); }
+
+/* Notifications / Toasts */
+.notification-container {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 2000;
+    pointer-events: none;
+}
+
+.toast {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1.2rem 1.8rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 12px;
+    border-left: 8px solid var(--primary);
+    transform: translateX(120%);
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: auto;
+}
+
+.toast.show { transform: translateX(0); }
+.toast-icon { font-size: 1.8rem; }
+.toast-content h4 { font-size: 1.1rem; margin-bottom: 2px; }
+.toast-content p { font-size: 0.9rem; color: var(--text-light); }
+
+.mini-dose-item.confirmed {
+    background-color: #E8F5E9;
+    border-color: var(--primary);
+    transform: scale(1.02);
+}
+
+.mini-dose-item.confirmed .btn {
+    display: none;
+}
+
+.detail-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.detail-section:last-child {
     border-bottom: none;
 }
 
-#historico strong {
-    color: var(--primaria);
+.detail-section h4 {
+    color: var(--primary);
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* Rodapé */
-footer {
-    text-align: center;
-    padding: 30px;
-    color: #888;
+.detail-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.detail-info-item {
     font-size: 0.95rem;
-    margin-top: 50px;
-    border-top: 1px solid #eee;
 }
 
-
-}
-/* =========================================
-   MEDIA QUERIES (DESIGN RESPONSIVO)
-   ========================================= */
-
-/* 1. TABLET (Telas menores que 1024px) */
-@media screen and (max-width: 1024px) {
-    main {
-        max-width: 90%; /* Deixa o conteúdo ocupar mais espaço na tela */
-    }
+.detail-info-item strong {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.8rem;
+    text-transform: uppercase;
 }
 
-/* 2. MOBILE GRANDE / TABLET PEQUENO (Telas menores que 768px) */
-@media screen and (max-width: 768px) {
-    header h1 {
-        font-size: 2.2rem; /* Diminui o título principal */
-    }
-
-    nav a {
-        padding: 12px 15px; /* Diminui o botão do menu para caber melhor */
-        font-size: 0.95rem;
-    }
-
-    section {
-        padding: 20px 15px; /* Reduz o espaço interno dos cartões */
-    }
+.med-item-detail {
+    background: #FBFBFB;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #F0F0F0;
 }
 
-/* 3. MOBILE PEQUENO (Celulares menores que 480px) */
-@media screen and (max-width: 480px) {
-    header h1 {
-        font-size: 1.8rem; /* Título ainda menor para não quebrar a linha feio */
-    }
-
-    /* Transforma o menu em uma coluna empilhada */
-    nav ul {
-        flex-direction: column; 
-    }
-    
-    nav a {
-        text-align: center;
-        border-bottom: 1px solid rgba(255,255,255,0.1); /* Linha divisória suave */
-    }
-
-    /* O form de busca que ficava lado a lado agora fica empilhado */
-    #busca form {
-        flex-direction: column;
-        align-items: stretch; /* Faz os itens esticarem 100% da largura */
-    }
-
-    #busca button {
-        width: 100%; /* Botão de busca ocupa a largura toda no celular */
-        margin-top: 10px;
-    }
-}
+/* Scrollbar refinement */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: #CCC; border-radius: 10px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }

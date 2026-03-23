@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LembreMED</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="auth-page">
+    <div class="auth-card animate-fade">
+        <div class="auth-header">
+            <h1>LembreMED</h1>
+            <p>Bem-vindo de volta!</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" class="form-control" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-large">Entrar</button>
+        </form>
+
+        <div class="auth-footer" style="text-align: center; margin-top: 1.5rem;">
+            <p>Não tem uma conta? <a href="inscricao.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Cadastre-se</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = JSON.parse(localStorage.getItem('lembremed_user'));
+            
+            if (user) {
+                localStorage.setItem('lembremed_logged', 'true');
+                window.location.href = 'index.html';
+            } else {
+                alert('Nenhum usuário encontrado com este e-mail. Por favor, cadastre-se.');
+            }
+        });
+
+        if (localStorage.getItem('lembremed_logged') === 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
