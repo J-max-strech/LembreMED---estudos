@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         await iniciarBanco();
         console.log("Banco pronto para uso.");
         
+        // Limpa dados legados do localStorage para evitar duplicidade ou lixo visual
+        localStorage.removeItem('lembremed_meds');
+        localStorage.removeItem('lembremed_meds_global');
+        
         // Se houver uma lista na tela, exibe os dados salvos
         listarDados();
     } catch (err) {
