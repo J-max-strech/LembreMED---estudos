@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - LembreMED</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="auth-page">
@@ -64,17 +64,7 @@
             localStorage.setItem('lembremed_user', JSON.stringify(user));
             localStorage.setItem('lembremed_logged', 'true');
             
-            // Initialize storage keys if they don't exist
-            if (!localStorage.getItem('lembremed_meds')) {
-                localStorage.setItem('lembremed_meds', JSON.stringify([]));
-            }
-            if (!localStorage.getItem('lembremed_patients')) {
-                localStorage.setItem('lembremed_patients', JSON.stringify([
-                    { name: 'Exemplo: José Silva', condition: 'Hipertensão', adherence: 85 }
-                ]));
-            }
-            
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         });
     </script>
 </body>

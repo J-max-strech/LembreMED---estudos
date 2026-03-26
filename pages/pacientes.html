@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacientes - LembreMED</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <a href="inicio.html" class="logo">LembreMED</a>
+            <div class="user-info">
+                <span id="userNameDisplay" style="font-weight: 600;">Carregando...</span>
+                <button onclick="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <nav class="sub-nav">
+            <a href="inicio.html" class="sub-nav-btn">Início</a>
+            <a href="pacientes.html" class="sub-nav-btn active">Pacientes</a>
+            <a href="medicamentos.html" class="sub-nav-btn">Medicamentos</a>
+            <a href="historico.html" class="sub-nav-btn">Histórico</a>
+        </nav>
+
+        <section id="patientRegistration" class="animate-fade">
+            <div class="card">
+                <div class="card-title"><h3>Cadastrar Novo Paciente</h3></div>
+                <form id="patientFormCaregiver">
+                    <div class="grid-opcoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="pName">Nome Completo</label>
+                            <input type="text" id="pName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pAge">Idade</label>
+                            <input type="number" id="pAge" class="form-control" min="0" max="120" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pCondition">Doença / Condição</label>
+                        <input type="text" id="pCondition" class="form-control" placeholder="Ex: Hipertensão" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pContact">Contato de Emergência</label>
+                        <input type="tel" id="pContact" class="form-control" placeholder="Apenas números (Ex: 11999999999)" pattern="[0-9]*" inputmode="numeric" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large">Salvar Paciente</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <div id="notificationContainer" class="notification-container"></div>
+    <script src="../js/script.js"></script>
+</body>
+</html>

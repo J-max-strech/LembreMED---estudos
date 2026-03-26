@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicamentos - LembreMED</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <a href="inicio.html" class="logo">LembreMED</a>
+            <div class="user-info">
+                <span id="userNameDisplay" style="font-weight: 600;">Carregando...</span>
+                <button onclick="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <nav class="sub-nav">
+            <a href="inicio.html" class="sub-nav-btn">Início</a>
+            <a href="pacientes.html" class="sub-nav-btn">Pacientes</a>
+            <a href="medicamentos.html" class="sub-nav-btn active">Medicamentos</a>
+            <a href="historico.html" class="sub-nav-btn">Histórico</a>
+        </nav>
+
+        <section id="medRegistration" class="animate-fade">
+            <div class="card">
+                <div class="card-title"><h3>Cadastrar Medicamento</h3></div>
+                <form id="medFormCaregiver">
+                    <div class="form-group">
+                        <label for="mPatient">Vincular ao Paciente</label>
+                        <div class="custom-select-wrapper" id="patientSelectWrapper">
+                            <div class="custom-select-trigger">
+                                <span id="selectedPatientText">Selecione um paciente</span>
+                                <div class="arrow"></div>
+                            </div>
+                            <div class="custom-options" id="patientOptionsContainer"></div>
+                            <input type="hidden" id="mPatient" required>
+                        </div>
+                    </div>
+                    <div class="grid-opcoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="mName">Nome do Remédio</label>
+                            <input type="text" id="mName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mDose">Dose (Ex: 500mg)</label>
+                            <input type="text" id="mDose" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="grid-opcoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="mTime">Horário</label>
+                            <input type="time" id="mTime" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mFreq">Frequência</label>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select-trigger">
+                                    <span class="selected-text">Diário</span>
+                                    <div class="arrow"></div>
+                                </div>
+                                <div class="custom-options">
+                                    <div class="custom-option selected" data-value="Diário">Diário</div>
+                                    <div class="custom-option" data-value="2x ao dia">2x ao dia</div>
+                                    <div class="custom-option" data-value="3x ao dia">3x ao dia</div>
+                                </div>
+                                <input type="hidden" id="mFreq" value="Diário" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large">Cadastrar Medicamento</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <div id="notificationContainer" class="notification-container"></div>
+    <script src="../js/script.js"></script>
+</body>
+</html>

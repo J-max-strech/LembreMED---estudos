@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Rotina - LembreMED</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .section-content { display: none; }
+        .section-content.active { display: block; }
+        .disease-item {
+            background: var(--white);
+            padding: 1.2rem;
+            border-radius: 18px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #F0F0F0;
+            box-shadow: var(--shadow);
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <a href="paciente-view.html" class="logo">LembreMED</a>
+            <div class="user-info">
+                <span id="userNameDisplay" style="font-weight: 600;">Olá, Paciente</span>
+                <button onclick="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Sub-navegação do Paciente -->
+        <nav class="sub-nav">
+            <button class="sub-nav-btn active" onclick="showSection('inicio', this)">Início</button>
+            <button class="sub-nav-btn" onclick="showSection('medicamentos', this)">Meus Medicamentos</button>
+            <button class="sub-nav-btn" onclick="showSection('doencas', this)">Minhas Doenças</button>
+            <button class="sub-nav-btn" onclick="showSection('historico', this)">Histórico</button>
+        </nav>
+
+        <!-- Seção: Início (Destaque para Próximo Medicamento) -->
+        <section id="section-inicio" class="section-content active animate-fade">
+            <div class="dashboard-grid">
+                <div class="card chart-container">
+                    <h3 style="font-size: 1rem; margin-bottom: 1rem;">Minha Adesão Hoje</h3>
+                    <svg viewBox="0 0 36 36" class="circular-chart">
+                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path id="patientAdherenceCircle" class="circle primary" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <text x="18" y="20.35" class="percentage" id="patientAdherenceText">0%</text>
+                    </svg>
+                    <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 1rem;">Doses tomadas vs. agendadas</p>
+                </div>
+                <div id="nextDoseContainer"></div>
+            </div>
+
+            <div class="card" id="upcomingMedsCard" style="display: none;">
+                <div class="card-title">
+                    <h3>Próximas Doses de Hoje</h3>
+                </div>
+                <div id="upcomingMedsList" class="med-list"></div>
+            </div>
+        </section>
+
+        <!-- Seção: Meus Medicamentos -->
+        <section id="section-medicamentos" class="section-content animate-fade">
+            <div class="card">
+                <div class="card-title">
+                    <h3>Meus Medicamentos</h3>
+                    <button class="btn btn-primary" onclick="openAddMedModal()">+ Adicionar</button>
+                </div>
+                <div id="medListContainer" class="med-list"></div>
+            </div>
+        </section>
+
+        <!-- Seção: Minhas Doenças -->
+        <section id="section-doencas" class="section-content animate-fade">
+            <div class="card">
+                <div class="card-title">
+                    <h3>Minhas Doenças</h3>
+                    <button class="btn btn-primary" onclick="openAddDiseaseModal()">+ Adicionar</button>
+                </div>
+                <div id="diseaseListContainer" class="med-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Histórico -->
+        <section id="section-historico" class="section-content animate-fade">
+            <div class="card">
+                <div class="card-title">
+                    <h3>Meu Histórico de Doses</h3>
+                </div>
+                <div id="patientHistoryContainer" class="history-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para Novo Medicamento -->
+    <div id="medPatientModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Novo Medicamento</h2>
+                <button class="close-modal" onclick="closeModal('medPatientModal')">&times;</button>
+            </div>
+            <form id="medFormPatient">
+                <input type="hidden" id="medId">
+                <div class="form-group">
+                    <label for="medName">Nome do Medicamento</label>
+                    <input type="text" id="medName" class="form-control" placeholder="Ex: Metformina" required>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <div class="form-group">
+                        <label for="medDose">Dosagem</label>
+                        <input type="text" id="medDose" class="form-control" placeholder="Ex: 500mg" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medTime">Horário</label>
+                        <input type="time" id="medTime" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="medFreq">Frequência</label>
+                    <input type="text" id="medFreq" class="form-control" placeholder="Ex: Todos os dias, 12/12h">
+                </div>
+                <div class="form-group">
+                    <label for="medDisease">Relacionar com Doença (Opcional)</label>
+                    <select id="medDisease" class="form-control" style="appearance: auto; background-image: none; padding-right: 1.4rem;">
+                        <option value="">Nenhuma</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large">Salvar Medicamento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Doenças -->
+    <div id="diseaseModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Cadastrar Doença</h2>
+                <button class="close-modal" onclick="closeModal('diseaseModal')">&times;</button>
+            </div>
+            <form id="diseaseForm">
+                <input type="hidden" id="diseaseId">
+                <div class="form-group">
+                    <label for="diseaseName">Nome da Doença/Condição</label>
+                    <input type="text" id="diseaseName" class="form-control" placeholder="Ex: Diabetes Tipo 2" required>
+                </div>
+                <div class="form-group">
+                    <label for="diseaseNote">Observação (Opcional)</label>
+                    <textarea id="diseaseNote" class="form-control" style="min-height: 100px; resize: vertical;" placeholder="Ex: Diagnosticado em 2020"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-large">Salvar Doença</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação Moderno -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal" style="max-width: 400px; text-align: center; padding: 2.5rem;">
+            <div id="confirmIcon" style="font-size: 4rem; margin-bottom: 1.5rem;">⚠️</div>
+            <h2 id="confirmTitle" style="margin-bottom: 1rem; color: var(--text);">Confirmar Ação</h2>
+            <p id="confirmMessage" style="color: var(--text-light); margin-bottom: 2rem; line-height: 1.5;">Tem certeza que deseja realizar esta operação?</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <button class="btn btn-outline" onclick="closeModal('confirmModal')">Cancelar</button>
+                <button id="btnConfirmAction" class="btn btn-danger">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notificationContainer" class="notification-container"></div>
+    <script src="../js/script.js"></script>
+    <script>
+        // Sobrescrever ou estender funções globais se necessário
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar a primeira aba
+            renderPatientMeds();
+        });
+    </script>
+</body>
+</html>

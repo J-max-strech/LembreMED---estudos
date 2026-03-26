@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - LembreMED</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="auth-page">
     <div class="auth-card animate-fade">
         <div class="auth-header">
-            <h1>LembreMED</h1>
-            <p>Bem-vindo de volta!</p>
+            <h1>Bem-vindo</h1>
+            <p>Gerencie sua saúde com facilidade.</p>
         </div>
 
         <form id="loginForm">
@@ -22,7 +22,7 @@
 
             <div class="form-group">
                 <label for="password">Senha</label>
-                <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                <input type="password" id="password" class="form-control" placeholder="Sua senha" required>
             </div>
 
             <button type="submit" class="btn btn-primary btn-large">Entrar</button>
@@ -36,19 +36,17 @@
     <script>
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const user = JSON.parse(localStorage.getItem('lembremed_user'));
             
-            if (user) {
+            const email = document.getElementById('email').value;
+            const savedUser = JSON.parse(localStorage.getItem('lembremed_user'));
+            
+            if (savedUser && savedUser.email === email) {
                 localStorage.setItem('lembremed_logged', 'true');
-                window.location.href = 'index.html';
+                window.location.href = '../index.html';
             } else {
-                alert('Nenhum usuário encontrado com este e-mail. Por favor, cadastre-se.');
+                alert('E-mail não encontrado ou senha incorreta.');
             }
         });
-
-        if (localStorage.getItem('lembremed_logged') === 'true') {
-            window.location.href = 'index.html';
-        }
     </script>
 </body>
 </html>

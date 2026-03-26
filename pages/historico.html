@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico - LembreMED</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <a href="inicio.html" class="logo">LembreMED</a>
+            <div class="user-info">
+                <span id="userNameDisplay" style="font-weight: 600;">Carregando...</span>
+                <button onclick="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <nav class="sub-nav">
+            <a href="inicio.html" class="sub-nav-btn">Início</a>
+            <a href="pacientes.html" class="sub-nav-btn">Pacientes</a>
+            <a href="medicamentos.html" class="sub-nav-btn">Medicamentos</a>
+            <a href="historico.html" class="sub-nav-btn active">Histórico</a>
+        </nav>
+
+        <section id="caregiverHistory" class="animate-fade">
+            <div class="card">
+                <div class="card-title"><h3>Histórico de Medicações</h3></div>
+                <div id="historyListContainer" class="history-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="notificationContainer" class="notification-container"></div>
+    <script src="../js/script.js"></script>
+</body>
+</html>
