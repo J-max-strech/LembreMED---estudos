@@ -124,7 +124,10 @@ function savePatients(patients) {
 }
 
 function getMeds() {
-    return JSON.parse(localStorage.getItem('lembremed_meds') || '[]');
+    let meds = JSON.parse(localStorage.getItem('lembremed_meds') || '[]');
+    // Limpeza forçada de dados de exemplo/teste (como Dipirona)
+    meds = meds.filter(m => m.name !== 'Dipirona');
+    return meds;
 }
 
 function saveMeds(meds) {
