@@ -34,21 +34,32 @@
 
     <section id="cadastro-paciente">
         <h2>Cadastro do Paciente</h2>
-        <form>
+        
+        <div id="mensagem-sucesso-paciente" style="display: none; background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: bold; text-align: center;">
+            Paciente salvo com sucesso!
+        </div>
+
+        <form id="form-paciente">
             <label>Nome:</label>
-            <input type="text" name="nome">
+            <input type="text" name="nome" required>
             <br><br>
 
             <label>E-mail:</label>
-            <input type="email" name="email">
+            <input type="email" name="email" required>
             <br><br>
 
             <label>Telefone:</label>
-            <input type="tel" name="telefone">
+            <input type="tel" name="telefone" required>
             <br><br>
 
             <button type="submit">Salvar Paciente</button>
         </form>
+
+        <div style="margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px;">
+            <h3 style="color: var(--primaria); font-size: 1.4rem;">Pacientes Cadastrados</h3>
+            <ul id="lista-pacientes" style="list-style-type: none; padding: 0;">
+                </ul>
+        </div>
     </section>
 
     <section id="cadastro-remedio">
@@ -105,6 +116,9 @@
     <p>Desenvolvido para o projeto LembreMED - 2026</p>
 </footer>
 
-    <script src="script.js"></script>
+        <script src="controller.js"></script>
+        <script src="db.js"></script>
+        <script src="script.js"></script>
+
 </body>
 </html>
