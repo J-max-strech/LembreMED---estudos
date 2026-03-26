@@ -75,10 +75,18 @@
                     <button type="submit" class="btn btn-primary btn-large">Cadastrar Medicamento</button>
                 </form>
             </div>
+            <div class="card" style="margin-top: 2rem;">
+                <div class="card-title"><h3>Medicamentos Salvos (IndexedDB)</h3></div>
+                <div id="listaMedicamentosDB" class="med-list">
+                    <!-- Listagem do IndexedDB -->
+                </div>
+            </div>
         </section>
     </main>
 
     <div id="notificationContainer" class="notification-container"></div>
     <script src="../js/script.js"></script>
+    <script src="../db.js"></script>
+    <script src="../controller.js"></script>
 </body>
 </html>

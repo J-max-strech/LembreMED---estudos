@@ -1,46 +1,93 @@
-// db.js - Configuração do IndexedDB para o LembreMED
+/**
+ * db.js - Mini framework para IndexedDB usando Promises e async/await.
+ * Este arquivo fornece funções globais para interagir com o banco de dados.
+ */
 
 const dbName = "LembreMedDB";
 const dbVersion = 1;
 let db;
 
-// Abre (ou cria) o banco de dados
-const request = indexedDB.open(dbName, dbVersion);
+/**
+ * Inicia o banco de dados IndexedDB.
+ * @returns {Promise<IDBDatabase>} Uma Promise que resolve com a instância do banco de dados.
+ */
+function iniciarBanco() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, dbVersion);
 
-// Evento disparado se a versão mudar ou o banco for criado pela primeira vez
-request.onupgradeneeded = (event) => {
-    db = event.target.result;
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            // Criar Tabela de Pacientes
+            if (!db.objectStoreNames.contains("pacientes")) {
+                db.createObjectStore("pacientes", { keyPath: "id", autoIncrement: true });
+            }
+            // Criar Tabela de Medicamentos
+            if (!db.objectStoreNames.contains("medicamentos")) {
+                db.createObjectStore("medicamentos", { keyPath: "id", autoIncrement: true });
+            }
+        };
 
-    // Criar Tabela de Pacientes
-    if (!db.objectStoreNames.contains("pacientes")) {
-        db.createObjectStore("pacientes", { keyPath: "id", autoIncrement: true });
-        console.log("Tabela 'pacientes' criada.");
-    }
+        request.onsuccess = (event) => {
+            db = event.target.result;
+            resolve(db);
+        };
 
-    // Criar Tabela de Medicamentos
-    if (!db.objectStoreNames.contains("medicamentos")) {
-        db.createObjectStore("medicamentos", { keyPath: "id", autoIncrement: true });
-        console.log("Tabela 'medicamentos' criada.");
-    }
+        request.onerror = (event) => {
+            console.error("Erro ao abrir IndexedDB:", event.target.error);
+            reject(event.target.error);
+        };
+    });
+}
 
-    // Criar Tabela de Histórico
-    if (!db.objectStoreNames.contains("historico")) {
-        db.createObjectStore("historico", { keyPath: "id", autoIncrement: true });
-        console.log("Tabela 'historico' criada.");
-    }
+/**
+ * Adiciona um item a uma tabela específica.
+ * @param {string} tabela Nome da store (ex: 'medicamentos').
+ * @param {object} item Objeto a ser salvo.
+ * @returns {Promise<number>} ID do item inserido.
+ */
+async function adicionarItem(tabela, item) {
+    if (!db) await iniciarBanco();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([tabela], "readwrite");
+        const store = transaction.objectStore(tabela);
+        const request = store.add(item);
 
-    // Criar Tabela de Doenças
-    if (!db.objectStoreNames.contains("doencas")) {
-        db.createObjectStore("doencas", { keyPath: "id", autoIncrement: true });
-        console.log("Tabela 'doencas' criada.");
-    }
-};
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
 
-request.onsuccess = (event) => {
-    db = event.target.result;
-    console.log("Banco de dados LembreMedDB aberto com sucesso.");
-};
+/**
+ * Busca todos os itens de uma tabela.
+ * @param {string} tabela Nome da store.
+ * @returns {Promise<Array>} Lista de objetos encontrados.
+ */
+async function buscarItens(tabela) {
+    if (!db) await iniciarBanco();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([tabela], "readonly");
+        const store = transaction.objectStore(tabela);
+        const request = store.getAll();
 
-request.onerror = (event) => {
-    console.error("Erro ao abrir o banco de dados:", event.target.errorCode);
-};
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+/**
+ * Deleta um item de uma tabela pelo seu ID.
+ * @param {string} tabela Nome da store.
+ * @param {number} id ID do item a ser removido.
+ * @returns {Promise<boolean>} Sucesso da operação.
+ */
+async function deletarItem(tabela, id) {
+    if (!db) await iniciarBanco();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([tabela], "readwrite");
+        const store = transaction.objectStore(tabela);
+        const request = store.delete(id);
+
+        request.onsuccess = () => resolve(true);
+        request.onerror = () => reject(request.error);
+    });
+}
