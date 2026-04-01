@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Machine: Data de Nascimento</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background-color: #2c3e50;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .slot-machine {
+            background: #444;
+            border: 10px solid #f1c40f;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+            box-shadow: 0 0 50px rgba(241, 196, 15, 0.5);
+        }
+
+        .reel {
+            width: 110px;
+            height: 120px;
+            background: white;
+            color: black;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #reelAno {
+            width: 160px;
+        }
+
+        .reel-content {
+            position: absolute;
+            transition: top 0.05s linear;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-stop {
+            padding: 10px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn-stop:hover {
+            background: #c0392b;
+        }
+
+        #btnSalvar {
+            margin-top: 30px;
+            padding: 20px 40px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none; /* Só aparece quando os 3 param */
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #f1c40f;
+        }
+
+        .instrucoes {
+            margin-bottom: 20px;
+            text-align: center;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instrucoes">
+        <h1>🎰 Nascimento Luck 🎰</h1>
+        <p>Pare cada roleta no número certo da sua data de nascimento. Boa sorte!</p>
+    </div>
+
+    <div class="slot-machine">
+        <div class="reel"><div id="valDia" class="reel-content">01</div></div>
+        <div class="reel"><div id="valMes" class="reel-content">01</div></div>
+        <div id="reelAno" class="reel"><div id="valAno" class="reel-content">1900</div></div>
+    </div>
+
+    <div class="controls">
+        <button id="stopDia" class="btn-stop">PARAR DIA</button>
+        <button id="stopMes" class="btn-stop">PARAR MÊS</button>
+        <button id="stopAno" class="btn-stop">PARAR ANO</button>
+    </div>
+
+    <div id="status" class="status">Data: --/--/----</div>
+
+    <button id="btnSalvar">🎰 SALVAR NO BANCO DE DADOS</button>
+
+    <script src="db.js"></script>
+    <script src="controller.js"></script>
+
+    <script>
+        let spinning = { dia: true, mes: true, ano: true };
+        let valores = { dia: 1, mes: 1, ano: 1990 };
+        let lastUpdate = 0;
+        const speed = 100; // Velocidade ajustada (0.1 segundos)
+
+        function updateReels(timestamp) {
+            if (!lastUpdate) lastUpdate = timestamp;
+            const progress = timestamp - lastUpdate;
+
+            if (progress >= speed) {
+                if (spinning.dia) {
+                    valores.dia = (valores.dia % 31) + 1;
+                    document.getElementById('valDia').innerText = valores.dia.toString().padStart(2, '0');
+                }
+                if (spinning.mes) {
+                    valores.mes = (valores.mes % 12) + 1;
+                    document.getElementById('valMes').innerText = valores.mes.toString().padStart(2, '0');
+                }
+                if (spinning.ano) {
+                    valores.ano = (valores.ano >= 2024) ? 1900 : valores.ano + 1;
+                    document.getElementById('valAno').innerText = valores.ano;
+                }
+                lastUpdate = timestamp;
+            }
+
+            document.getElementById('status').innerText = `Data: ${valores.dia.toString().padStart(2, '0')}/${valores.mes.toString().padStart(2, '0')}/${valores.ano}`;
+            
+            if (spinning.dia || spinning.mes || spinning.ano) {
+                requestAnimationFrame(updateReels);
+            } else {
+                document.getElementById('btnSalvar').style.display = 'block';
+            }
+        }
+
+        // Configura os botões de parar
+        document.getElementById('stopDia').onclick = function() { 
+            spinning.dia = false; 
+            this.disabled = true;
+            this.style.background = '#7f8c8d';
+        };
+        document.getElementById('stopMes').onclick = function() { 
+            spinning.mes = false; 
+            this.disabled = true;
+            this.style.background = '#7f8c8d';
+        };
+        document.getElementById('stopAno').onclick = function() { 
+            spinning.ano = false; 
+            this.disabled = true;
+            this.style.background = '#7f8c8d';
+        };
+
+        // Faz os botões "tremerem" levemente
+        document.querySelectorAll('.btn-stop').forEach(btn => {
+            btn.onmouseover = () => {
+                if (!btn.disabled) {
+                    btn.style.transform = `translate(${Math.random()*4 - 2}px, ${Math.random()*4 - 2}px)`;
+                }
+            };
+        });
+
+        // Salvar no IndexedDB
+        document.getElementById('btnSalvar').onclick = async function() {
+            const dataCompleta = `${valores.ano}-${valores.mes.toString().padStart(2, '0')}-${valores.dia.toString().padStart(2, '0')}`;
+            
+            const novoPaciente = {
+                nome: "Apostador da Data",
+                dataNascimento: dataCompleta,
+                dataCadastro: new Date().toISOString(),
+                metodo: "Slot Machine Sequential"
+            };
+
+            try {
+                const id = await adicionarItem('pacientes', novoPaciente);
+                alert("🎰 JACKPOT! Data salva com sucesso! ID: " + id);
+                console.log("Salvo no IndexedDB:", novoPaciente);
+            } catch (err) {
+                console.error("Erro ao salvar:", err);
+                alert("A casa caiu! Erro ao salvar.");
+            }
+        };
+
+        // Inicia o giro
+        updateReels();
+    </script>
+</body>
+</html>
