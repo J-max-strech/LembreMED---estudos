@@ -1,284 +1,526 @@
-/* Variáveis de Cores LembreMED */
 :root {
-    --cor-verde: #0D7A47;     /* Verde LembreMed */
-    --cor-vermelho: #E33F31;  /* Vermelho LembreMed */
-    
+    --cor-verde: #0d7a47;
+    --cor-vermelho: #e33f31;
     --primaria: var(--cor-verde);
+    --primaria-escura: #0a5f36;
     --secundaria: var(--cor-vermelho);
-    --fundo: #FFFFFF;
-    --texto: #333333;
-    --branco: #FFFFFF;
-    
-    /* Cores de Hover (mais escuras para feedback visual) */
-    --primaria-escura: #0A5F36;
-    --secundaria-escura: #C63124;
+    --secundaria-escura: #c63124;
+    --fundo: #f5f7f4;
+    --superficie: #ffffff;
+    --superficie-suave: #eef6f1;
+    --texto: #233127;
+    --texto-suave: #607164;
+    --borda: #d7e1d9;
+    --sucesso-fundo: #dff4e5;
+    --sucesso-texto: #14532d;
+    --sombra: 0 20px 40px rgba(16, 24, 40, 0.08);
 }
 
-/* Configurações Globais */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--fundo);
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(13, 122, 71, 0.08), transparent 30%),
+        linear-gradient(180deg, #f7faf8 0%, #f2f5f3 100%);
     color: var(--texto);
-    margin: 0;
+}
+
+a {
+    color: inherit;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
     padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
-/* Cabeçalho */
-header {
-    background-color: var(--primaria); /* Verde LembreMed */
-    color: var(--branco);
-    text-align: center;
-    padding: 2.5rem 1rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.hero {
+    background: linear-gradient(135deg, #0d7a47 0%, #138a55 60%, #1f9b65 100%);
+    color: #ffffff;
+    padding: 4.5rem 1.25rem 3.5rem;
 }
 
-header h1 {
-    margin: 0 0 10px 0;
-    font-size: 2.8rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+.hero__content {
+    max-width: 1080px;
+    margin: 0 auto;
 }
 
-header p {
+.hero__eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.hero h1 {
     margin: 0;
-    font-size: 1.2rem;
-    opacity: 0.9;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1;
 }
 
-/* Menu de Navegação */
+.hero p {
+    max-width: 620px;
+    margin: 1rem 0 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 1.8rem;
+}
+
+.hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.8rem 1.2rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.hero__button:hover,
+.hero__button:focus-visible {
+    transform: translateY(-1px);
+}
+
+.hero__button--primary {
+    background: #ffffff;
+    color: var(--primaria);
+}
+
+.hero__button--secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
 nav {
-    background-color: var(--secundaria); /* Vermelho LembreMed */
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 20;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.88);
+    border-bottom: 1px solid rgba(215, 225, 217, 0.85);
 }
 
 nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap; /* Permite quebrar linha no celular */
+    gap: 0.4rem;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0.8rem 1rem;
+    list-style: none;
 }
 
 nav a {
     display: block;
-    padding: 18px 25px;
-    color: var(--branco);
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    color: var(--texto);
     text-decoration: none;
     font-weight: 600;
-    transition: background 0.3s ease;
 }
 
-nav a:hover {
-    background-color: var(--secundaria-escura); /* Vermelho Escuro LembreMed */
+nav a:hover,
+nav a:focus-visible {
+    background: var(--superficie-suave);
 }
 
-/* Corpo Principal */
 main {
-    max-width: 850px;
-    margin: 40px auto;
-    padding: 0 25px;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem 4rem;
 }
 
-/* Estilo dos Cartões (Sections) */
-section {
-    background: var(--branco);
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 35px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
-    border: 1px solid #f0f0f0;
+.section {
+    padding: 1.75rem;
+    margin-bottom: 1.5rem;
+    background: var(--superficie);
+    border: 1px solid rgba(215, 225, 217, 0.85);
+    border-radius: 24px;
+    box-shadow: var(--sombra);
 }
 
-h2 {
-    color: var(--primaria); /* Verde LembreMed */
-    border-bottom: 2px solid #eee;
-    padding-bottom: 12px;
-    margin-top: 0;
-    font-size: 1.8rem;
+.section__heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
 }
 
-/* Formulários */
-label {
-    font-weight: 600;
-    color: #444;
+.section__eyebrow {
+    margin: 0 0 0.4rem;
+    color: var(--primaria);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.section h2 {
+    margin: 0;
+    font-size: 1.9rem;
+}
+
+.section__description {
+    max-width: 380px;
+    margin: 0;
+    color: var(--texto-suave);
+    line-height: 1.6;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    padding: 1.35rem;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #fefefe 0%, #f7faf8 100%);
+    border: 1px solid var(--borda);
+}
+
+.stat-card--alert {
+    background: linear-gradient(180deg, #fff6f4 0%, #fff2ef 100%);
+    border-color: #f0cbc6;
+}
+
+.stat-card__label {
     display: block;
-    margin-top: 15px;
+    color: var(--texto-suave);
+    font-size: 0.95rem;
 }
 
-input[type="text"], 
-input[type="email"], 
-input[type="tel"], 
-input[type="number"], 
+.stat-card__value {
+    display: block;
+    margin-top: 0.45rem;
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.stat-card__hint {
+    display: block;
+    margin-top: 0.6rem;
+    color: var(--texto-suave);
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.form-card,
+.list-panel {
+    padding: 1.25rem;
+    background: #fbfcfb;
+    border: 1px solid var(--borda);
+    border-radius: 18px;
+}
+
+.list-panel {
+    margin-top: 1rem;
+}
+
+.list-panel__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.list-panel__header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.list-panel__badge {
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: var(--superficie-suave);
+    color: var(--primaria);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.field--full {
+    grid-column: 1 / -1;
+}
+
+label,
+legend {
+    font-weight: 700;
+    color: var(--texto);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
 input[type="time"] {
     width: 100%;
-    padding: 12px 15px;
-    margin-top: 8px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-sizing: border-box; /* Impede que o campo vaze da tela */
-    font-family: inherit;
-    font-size: 1rem;
+    min-height: 48px;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--borda);
+    border-radius: 14px;
+    background: #ffffff;
+    color: var(--texto);
+    font: inherit;
 }
 
-fieldset {
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 20px;
-    margin-top: 20px;
+input::placeholder {
+    color: #90a096;
 }
 
-legend {
-    font-weight: bold;
-    color: var(--primaria); /* Verde LembreMed */
-    padding: 0 8px;
-    font-size: 1.1rem;
+.choice-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem;
+    margin: 0;
+    border: 1px solid var(--borda);
+    border-radius: 16px;
 }
 
-/* Escondendo os <br> excessivos pois o CSS já faz o espaçamento */
-form br {
-    display: none; 
-}
-
-/* Botões */
-button {
-    background-color: var(--primaria); /* Verde LembreMed */
-    color: var(--branco);
-    border: none;
-    padding: 15px 25px;
-    font-size: 1.1rem;
-    border-radius: 6px;
+.choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--borda);
+    border-radius: 14px;
+    background: #ffffff;
     cursor: pointer;
-    font-weight: bold;
-    width: 100%;
-    margin-top: 25px;
-    transition: background 0.3s ease, transform 0.1s ease;
 }
 
-button:hover {
-    background-color: var(--primaria-escura); /* Verde Escuro LembreMed */
+.choice input {
+    margin: 0;
+}
+
+.search-form {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.search-form input {
+    flex: 1;
+}
+
+button {
+    min-height: 48px;
+    padding: 0.9rem 1.3rem;
+    border: none;
+    border-radius: 14px;
+    background: var(--primaria);
+    color: #ffffff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+button:hover,
+button:focus-visible {
+    background: var(--primaria-escura);
 }
 
 button:active {
-    transform: translateY(1px); /* Feedback tátil de clique */
+    transform: translateY(1px);
 }
 
-/* Ajuste do form de busca para ficar na mesma linha */
-#busca form {
-    display: flex;
-    gap: 12px;
-    align-items: center;
+button.button-danger {
+    background: var(--secundaria);
 }
 
-#busca input {
-    margin-top: 0;
-input[type="email"], 
-input[type="tel"], 
-input[type="number"], 
-input[type="time"] {
-    width: 100%;
-    flex-grow: 1;
+button.button-danger:hover,
+button.button-danger:focus-visible {
+    background: var(--secundaria-escura);
 }
 
-#busca button {
-    width: auto;
-    margin-top: 0;
-    padding: 12px 20px;
+input:focus-visible,
+button:focus-visible,
+a:focus-visible,
+.choice:focus-within {
+    outline: 3px solid rgba(19, 138, 85, 0.25);
+    outline-offset: 2px;
 }
 
-/* Listas (Painel e Histórico) */
-ul {
-    line-height: 1.7;
-    padding-left: 1.5rem;
+.feedback {
+    margin-bottom: 1rem;
+    padding: 0.95rem 1rem;
+    border-radius: 16px;
+    font-weight: 700;
 }
 
-#historico ul {
-    list-style-type: none;
-    padding-left: 0;
+.feedback--success {
+    background: var(--sucesso-fundo);
+    color: var(--sucesso-texto);
+    border: 1px solid #b6e3c3;
 }
 
-#historico li {
-    padding: 15px 10px;
-    border-bottom: 1px solid #eee;
+.data-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.data-list__item,
+.data-list__empty {
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
     align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e7ece8;
 }
 
-#historico li:last-child {
+.data-list__item:last-child,
+.data-list__empty:last-child {
     border-bottom: none;
 }
 
-#historico strong {
-    color: var(--primaria);
+.data-list__main {
+    min-width: 0;
 }
 
-/* Rodapé */
+.data-list__title {
+    display: block;
+    font-weight: 700;
+}
+
+.data-list__meta {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--texto-suave);
+    line-height: 1.5;
+}
+
+.data-list__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.badge--success {
+    background: #e3f6ea;
+    color: #166534;
+}
+
+.badge--warning {
+    background: #fff1df;
+    color: #9a4d00;
+}
+
+.data-list__empty {
+    color: var(--texto-suave);
+    justify-content: flex-start;
+}
+
 footer {
+    padding: 2rem 1rem 3rem;
     text-align: center;
-    padding: 30px;
-    color: #888;
-    font-size: 0.95rem;
-    margin-top: 50px;
-    border-top: 1px solid #eee;
+    color: var(--texto-suave);
 }
 
-
-}
-/* =========================================
-   MEDIA QUERIES (DESIGN RESPONSIVO)
-   ========================================= */
-
-/* 1. TABLET (Telas menores que 1024px) */
-@media screen and (max-width: 1024px) {
-    main {
-        max-width: 90%; /* Deixa o conteúdo ocupar mais espaço na tela */
-    }
-}
-
-/* 2. MOBILE GRANDE / TABLET PEQUENO (Telas menores que 768px) */
-@media screen and (max-width: 768px) {
-    header h1 {
-        font-size: 2.2rem; /* Diminui o título principal */
-    }
-
-    nav a {
-        padding: 12px 15px; /* Diminui o botão do menu para caber melhor */
-        font-size: 0.95rem;
-    }
-
-    section {
-        padding: 20px 15px; /* Reduz o espaço interno dos cartões */
-    }
-}
-
-/* 3. MOBILE PEQUENO (Celulares menores que 480px) */
-@media screen and (max-width: 480px) {
-    header h1 {
-        font-size: 1.8rem; /* Título ainda menor para não quebrar a linha feio */
-    }
-
-    /* Transforma o menu em uma coluna empilhada */
-    nav ul {
-        flex-direction: column; 
-    }
-    
-    nav a {
-        text-align: center;
-        border-bottom: 1px solid rgba(255,255,255,0.1); /* Linha divisória suave */
-    }
-
-    /* O form de busca que ficava lado a lado agora fica empilhado */
-    #busca form {
+@media (max-width: 900px) {
+    .section__heading,
+    .list-panel__header {
         flex-direction: column;
-        align-items: stretch; /* Faz os itens esticarem 100% da largura */
+        align-items: flex-start;
     }
 
-    #busca button {
-        width: 100%; /* Botão de busca ocupa a largura toda no celular */
-        margin-top: 10px;
+    .dashboard-grid,
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section__description {
+        max-width: none;
     }
 }
 
+@media (max-width: 640px) {
+    .hero {
+        padding-top: 3.5rem;
+    }
 
+    nav ul {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 0.9rem;
+    }
+
+    main {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .section {
+        padding: 1.25rem;
+        border-radius: 20px;
+    }
+
+    .search-form,
+    .data-list__item,
+    .data-list__empty {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .data-list__actions {
+        justify-content: space-between;
+    }
+
+    .data-list__actions button {
+        width: 100%;
+    }
+}

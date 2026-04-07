@@ -2,112 +2,184 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Projeto LembreMED</title>
 </head>
 
 <body>
 
-<header>
-    <h1>LembreMED</h1>
-    <p>Sistema para ajudar a não esquecer os remédios.</p>
+<header class="hero">
+    <div class="hero__content">
+        <div class="hero__eyebrow">Cuidado diário com mais clareza</div>
+        <h1>LembreMED</h1>
+        <p>Organize pacientes, medicamentos e horários em uma tela simples de acompanhar.</p>
+        <div class="hero__actions">
+            <a class="hero__button hero__button--primary" href="#cadastro-remedio">Cadastrar medicamento</a>
+            <a class="hero__button hero__button--secondary" href="#cadastro-paciente">Cadastrar paciente</a>
+        </div>
+    </div>
 </header>
 
-<nav>
+<nav aria-label="Navegação principal">
     <ul>
-        <li><a href="#painel">Início</a></li>
-        <li><a href="#cadastro-paciente">Cadastrar Paciente</a></li>
-        <li><a href="#cadastro-remedio">Cadastrar Remédio</a></li>
+        <li><a href="#painel">Painel</a></li>
+        <li><a href="#cadastro-paciente">Pacientes</a></li>
+        <li><a href="#cadastro-remedio">Medicamentos</a></li>
         <li><a href="#historico">Histórico</a></li>
     </ul>
 </nav>
 
 <main>
 
-    <section id="painel">
-        <h2>Painel de hoje</h2>
-        <ul>
-            <li>Doses Tomadas: 10</li>
-            <li>Doses Atrasadas: 2</li>
-        </ul>
-    </section>
-
-    <section id="cadastro-paciente">
-        <h2>Cadastro do Paciente</h2>
-        
-        <div id="mensagem-sucesso-paciente" style="display: none; background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: bold; text-align: center;">
-            Paciente salvo com sucesso!
+    <section id="painel" class="section">
+        <div class="section__heading">
+            <div>
+                <p class="section__eyebrow">Visão rápida</p>
+                <h2>Painel de hoje</h2>
+            </div>
+            <p class="section__description">Acompanhe o que já foi registrado e o que ainda precisa de atenção.</p>
         </div>
 
-        <form id="form-paciente">
-            <label>Nome:</label>
-            <input type="text" name="nome" required>
-            <br><br>
+        <div class="dashboard-grid">
+            <article class="stat-card">
+                <span class="stat-card__label">Medicamentos cadastrados</span>
+                <strong class="stat-card__value" id="metric-doses-tomadas">0</strong>
+                <span class="stat-card__hint">Itens disponíveis para consulta e acompanhamento.</span>
+            </article>
 
-            <label>E-mail:</label>
-            <input type="email" name="email" required>
-            <br><br>
+            <article class="stat-card stat-card--alert">
+                <span class="stat-card__label">Cadastros em gotas</span>
+                <strong class="stat-card__value" id="metric-doses-atrasadas">0</strong>
+                <span class="stat-card__hint">Registros que pedem acompanhamento mais frequente.</span>
+            </article>
 
-            <label>Telefone:</label>
-            <input type="tel" name="telefone" required>
-            <br><br>
+            <article class="stat-card">
+                <span class="stat-card__label">Pacientes cadastrados</span>
+                <strong class="stat-card__value" id="metric-pacientes">0</strong>
+                <span class="stat-card__hint">Base atual disponível para acompanhamento.</span>
+            </article>
+        </div>
+    </section>
 
-            <button type="submit">Salvar Paciente</button>
+    <section id="cadastro-paciente" class="section">
+        <div class="section__heading">
+            <div>
+                <p class="section__eyebrow">Cadastro</p>
+                <h2>Pacientes</h2>
+            </div>
+            <p class="section__description">Registre os dados principais para facilitar contato e organização.</p>
+        </div>
+
+        <div id="mensagem-sucesso-paciente" class="feedback feedback--success" role="status" aria-live="polite" hidden>
+            Paciente salvo com sucesso.
+        </div>
+
+        <form id="form-paciente" class="form-card">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="paciente-nome">Nome</label>
+                    <input id="paciente-nome" type="text" name="nome" placeholder="Ex.: Maria da Silva" required>
+                </div>
+
+                <div class="field">
+                    <label for="paciente-email">E-mail</label>
+                    <input id="paciente-email" type="email" name="email" placeholder="maria@email.com" required>
+                </div>
+
+                <div class="field field--full">
+                    <label for="paciente-telefone">Telefone</label>
+                    <input id="paciente-telefone" type="tel" name="telefone" placeholder="(63) 99999-9999" required>
+                </div>
+            </div>
+
+            <button type="submit">Salvar paciente</button>
         </form>
 
-        <div style="margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px;">
-            <h3 style="color: var(--primaria); font-size: 1.4rem;">Pacientes Cadastrados</h3>
-            <ul id="lista-pacientes" style="list-style-type: none; padding: 0;">
-                </ul>
+        <div class="list-panel">
+            <div class="list-panel__header">
+                <h3>Pacientes cadastrados</h3>
+                <span class="list-panel__badge" id="contador-pacientes">0 pacientes</span>
+            </div>
+            <ul id="lista-pacientes" class="data-list" aria-live="polite"></ul>
         </div>
     </section>
 
-    <section id="cadastro-remedio">
-        <h2>Novo Medicamento</h2>
-        
-        <div id="mensagem-sucesso" style="display: none; background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: bold; text-align: center;">
-            Remédio cadastrado com sucesso!
+    <section id="cadastro-remedio" class="section">
+        <div class="section__heading">
+            <div>
+                <p class="section__eyebrow">Cadastro</p>
+                <h2>Medicamentos</h2>
+            </div>
+            <p class="section__description">Defina nome, dose, formato e horário para manter a rotina visível.</p>
         </div>
 
-        <form id="form-remedio">
-            <label>Nome do Remédio:</label>
-            <input type="text" name="remedio">
-            <br><br>
+        <div id="mensagem-sucesso" class="feedback feedback--success" role="status" aria-live="polite" hidden>
+            Medicamento cadastrado com sucesso.
+        </div>
 
-            <label>Dose (mg):</label>
-            <input type="number" name="dose">
-            <br><br>
+        <form id="form-remedio" class="form-card">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="remedio-nome">Nome do medicamento</label>
+                    <input id="remedio-nome" type="text" name="remedio" placeholder="Ex.: Metformina" required>
+                </div>
 
-            <fieldset>
-                <legend>Como tomar:</legend>
-                <input type="radio" name="tipo" value="comprimido"> Comprimido
-                <input type="radio" name="tipo" value="gotas"> Gotas
-            </fieldset>
-            <br>
+                <div class="field">
+                    <label for="remedio-dose">Dose (mg)</label>
+                    <input id="remedio-dose" type="number" name="dose" placeholder="500" required>
+                </div>
 
-            <label>Horário:</label>
-            <input type="time" name="hora">
-            <br><br>
+                <fieldset class="field field--full choice-group">
+                    <legend>Como tomar</legend>
 
-            <button type="submit">Confirmar Cadastro</button>
+                    <label class="choice">
+                        <input type="radio" name="tipo" value="comprimido" required>
+                        <span>Comprimido</span>
+                    </label>
+
+                    <label class="choice">
+                        <input type="radio" name="tipo" value="gotas">
+                        <span>Gotas</span>
+                    </label>
+                </fieldset>
+
+                <div class="field field--full">
+                    <label for="remedio-hora">Horário</label>
+                    <input id="remedio-hora" type="time" name="hora" required>
+                </div>
+            </div>
+
+            <button type="submit">Salvar medicamento</button>
         </form>
     </section>
 
-    <section id="busca">
-        <h2>Procurar Remédio</h2>
-        <form>
-            <input type="text" name="buscar" placeholder="Digite o nome...">
+    <section id="busca" class="section">
+        <div class="section__heading">
+            <div>
+                <p class="section__eyebrow">Consulta</p>
+                <h2>Buscar medicamento</h2>
+            </div>
+            <p class="section__description">Filtre rapidamente o histórico pelo nome do medicamento.</p>
+        </div>
+
+        <form id="form-busca" class="search-form">
+            <label class="sr-only" for="busca-remedio">Buscar medicamento</label>
+            <input id="busca-remedio" type="text" name="buscar" placeholder="Digite o nome do medicamento">
             <button type="submit">Buscar</button>
         </form>
     </section>
 
-    <section id="historico">
-        <h2>Histórico de Doses</h2>
-        <ul>
-            <li><strong>08:00</strong> - Metformina - Tomado</li>
-            <li><strong>12:00</strong> - Insulina - Atrasado</li>
-            <li><strong>20:00</strong> - Dipirona - Agendado</li>
-        </ul>
+    <section id="historico" class="section">
+        <div class="section__heading">
+            <div>
+                <p class="section__eyebrow">Acompanhamento</p>
+                <h2>Histórico de doses</h2>
+            </div>
+            <p class="section__description">Veja horários agendados e remova registros quando necessário.</p>
+        </div>
+
+        <ul id="lista-historico" class="data-list" aria-live="polite"></ul>
     </section>
 
 </main>
@@ -116,9 +188,9 @@
     <p>Desenvolvido para o projeto LembreMED - 2026</p>
 </footer>
 
-        <script src="controller.js"></script>
-        <script src="db.js"></script>
-        <script src="script.js"></script>
+<script src="db.js"></script>
+<script src="controller.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>

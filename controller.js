@@ -1,131 +1,206 @@
 /* =========================================================================
-   controller.js - A ponte entre o HTML e o Banco de Dados
+   controller.js - Ponte entre interface e IndexedDB
    ========================================================================= */
 
 // --- ELEMENTOS DO HTML ---
-// Remédios
 const formRemedio = document.getElementById('form-remedio');
 const mensagemSucessoRemedio = document.getElementById('mensagem-sucesso');
-const listaHistorico = document.querySelector('#historico ul');
+const listaHistorico = document.getElementById('lista-historico');
+const formBusca = document.getElementById('form-busca');
+const buscaInput = document.getElementById('busca-remedio');
 
-// Pacientes 
 const formPaciente = document.getElementById('form-paciente');
 const mensagemSucessoPaciente = document.getElementById('mensagem-sucesso-paciente');
-const listaPacientes = document.getElementById('lista-pacientes'); // NOVO: Captura a lista de pacientes
+const listaPacientes = document.getElementById('lista-pacientes');
+const contadorPacientes = document.getElementById('contador-pacientes');
 
+const metricDosesTomadas = document.getElementById('metric-doses-tomadas');
+const metricDosesAtrasadas = document.getElementById('metric-doses-atrasadas');
+const metricPacientes = document.getElementById('metric-pacientes');
 
-// ==========================================
-// LÓGICA DE PACIENTES (NOVIDADE)
-// ==========================================
+let termoBuscaHistorico = '';
 
-async function atualizarTelaPacientes() {
-    const pacientes = await buscarItens('pacientes'); // Puxa do banco
-    listaPacientes.innerHTML = ''; // Limpa a tela
+function mostrarMensagem(elemento) {
+    elemento.hidden = false;
+
+    window.setTimeout(() => {
+        elemento.hidden = true;
+    }, 3000);
+}
+
+function criarEstadoVazio(texto) {
+    const li = document.createElement('li');
+    li.className = 'data-list__empty';
+    li.textContent = texto;
+    return li;
+}
+
+function atualizarMetricas(pacientes, remedios) {
+    metricPacientes.textContent = pacientes.length;
+    metricDosesTomadas.textContent = remedios.length;
+
+    const dosesComAtencao = remedios.filter((item) => item.tipo !== 'comprimido').length;
+    metricDosesAtrasadas.textContent = dosesComAtencao;
+}
+
+function atualizarContadorPacientes(total) {
+    contadorPacientes.textContent = `${total} ${total === 1 ? 'paciente' : 'pacientes'}`;
+}
+
+function renderizarPacientes(pacientes) {
+    listaPacientes.innerHTML = '';
+    atualizarContadorPacientes(pacientes.length);
 
     if (pacientes.length === 0) {
-        listaPacientes.innerHTML = '<li style="padding: 10px;">Nenhum paciente cadastrado ainda.</li>';
+        listaPacientes.appendChild(criarEstadoVazio('Nenhum paciente cadastrado ainda.'));
         return;
     }
 
-    // Desenha cada paciente na tela
-    pacientes.forEach(paciente => {
+    pacientes.forEach((paciente) => {
         const li = document.createElement('li');
-        li.style.padding = '15px 10px';
-        li.style.borderBottom = '1px solid #eee';
-        li.style.display = 'flex';
-        li.style.justifyContent = 'space-between';
-        li.style.alignItems = 'center';
+        li.className = 'data-list__item';
 
         li.innerHTML = `
-            <span><strong>${paciente.nome}</strong><br><small style="color: #666;">${paciente.telefone} | ${paciente.email}</small></span>
-            <button onclick="deletarPacienteERecarregar(${paciente.id})" style="padding: 5px 10px; width: auto; background-color: var(--secundaria); font-size: 0.8rem; margin-top: 0;">Excluir</button>
+            <div class="data-list__main">
+                <span class="data-list__title">${paciente.nome}</span>
+                <span class="data-list__meta">${paciente.telefone} | ${paciente.email}</span>
+            </div>
+            <div class="data-list__actions">
+                <button type="button" class="button-danger" data-delete-paciente="${paciente.id}">Excluir</button>
+            </div>
         `;
+
         listaPacientes.appendChild(li);
     });
 }
 
-async function deletarPacienteERecarregar(id) {
-    await deletarItem('pacientes', id); // Deleta da tabela pacientes
-    atualizarTelaPacientes(); // Recarrega a lista
-}
-
-formPaciente.addEventListener('submit', async function(evento) {
-    evento.preventDefault(); 
-    
-    const nomePaciente = document.querySelector('#form-paciente input[name="nome"]').value;
-    const emailPaciente = document.querySelector('#form-paciente input[name="email"]').value;
-    const telPaciente = document.querySelector('#form-paciente input[name="telefone"]').value;
-
-    const novoPaciente = {
-        nome: nomePaciente,
-        email: emailPaciente,
-        telefone: telPaciente
-    };
-
-    await adicionarItem('pacientes', novoPaciente);
-
-    mensagemSucessoPaciente.style.display = 'block';
-    formPaciente.reset();
-    
-    setTimeout(() => {
-        mensagemSucessoPaciente.style.display = 'none';
-    }, 3000);
-
-    // NOVO: Chama a função para atualizar a lista na hora que salva!
-    atualizarTelaPacientes(); 
-});
-
-
-// ==========================================
-// LÓGICA DE REMÉDIOS (Continua igual)
-// ==========================================
-
-async function atualizarTela() {
-    const remedios = await buscarItens('remedios');
+function renderizarHistorico(remedios) {
     listaHistorico.innerHTML = '';
 
     if (remedios.length === 0) {
-        listaHistorico.innerHTML = '<li>Nenhum remédio cadastrado ainda.</li>';
+        listaHistorico.appendChild(criarEstadoVazio('Nenhum medicamento encontrado para este filtro.'));
         return;
     }
 
-    remedios.forEach(item => {
+    remedios.forEach((item) => {
         const li = document.createElement('li');
+        const statusClasse = item.tipo === 'comprimido' ? 'badge badge--success' : 'badge badge--warning';
+        const statusTexto = item.tipo === 'comprimido' ? 'Comprimido' : 'Gotas';
+
+        li.className = 'data-list__item';
         li.innerHTML = `
-            <span><strong>${item.hora}</strong> - ${item.remedio} (${item.dose}mg, ${item.tipo})</span>
-            <button onclick="deletarERecarregar(${item.id})" style="padding: 5px 10px; margin-left: auto; width: auto; background-color: var(--secundaria); font-size: 0.8rem;">Excluir</button>
+            <div class="data-list__main">
+                <span class="data-list__title">${item.hora} - ${item.remedio}</span>
+                <span class="data-list__meta">Dose: ${item.dose}mg | Forma: ${item.tipo}</span>
+            </div>
+            <div class="data-list__actions">
+                <span class="${statusClasse}">${statusTexto}</span>
+                <button type="button" class="button-danger" data-delete-remedio="${item.id}">Excluir</button>
+            </div>
         `;
+
         listaHistorico.appendChild(li);
     });
 }
 
-async function deletarERecarregar(id) {
-    await deletarItem('remedios', id);
-    atualizarTela();
+async function atualizarTelaPacientes() {
+    const pacientes = await buscarItens('pacientes');
+    const remedios = await buscarItens('remedios');
+
+    renderizarPacientes(pacientes);
+    atualizarMetricas(pacientes, remedios);
 }
 
-formRemedio.addEventListener('submit', async function(evento) {
-    evento.preventDefault(); 
-    const nomeInput = document.querySelector('input[name="remedio"]').value;
-    const doseInput = document.querySelector('input[name="dose"]').value;
-    const horaInput = document.querySelector('input[name="hora"]').value;
-    const tipoSelecionado = document.querySelector('input[name="tipo"]:checked');
-    const tipoValor = tipoSelecionado ? tipoSelecionado.value : 'Não informado';
+async function atualizarTelaHistorico() {
+    const pacientes = await buscarItens('pacientes');
+    const remedios = await buscarItens('remedios');
+    const termo = termoBuscaHistorico.trim().toLowerCase();
+    const filtrados = termo
+        ? remedios.filter((item) => item.remedio.toLowerCase().includes(termo))
+        : remedios;
 
-    const novoRemedio = { remedio: nomeInput, dose: doseInput, tipo: tipoValor, hora: horaInput };
+    renderizarHistorico(filtrados);
+    atualizarMetricas(pacientes, remedios);
+}
 
-    await adicionarItem('remedios', novoRemedio);
+async function atualizarTudo() {
+    await atualizarTelaPacientes();
+    await atualizarTelaHistorico();
+}
 
-    mensagemSucessoRemedio.style.display = 'block';
-    formRemedio.reset();
-    setTimeout(() => { mensagemSucessoRemedio.style.display = 'none'; }, 3000);
+async function deletarPacienteERecarregar(id) {
+    await deletarItem('pacientes', id);
+    await atualizarTudo();
+}
 
-    atualizarTela();
+async function deletarRemedioERecarregar(id) {
+    await deletarItem('remedios', id);
+    await atualizarTudo();
+}
+
+formPaciente.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+
+    const novoPaciente = {
+        nome: document.getElementById('paciente-nome').value,
+        email: document.getElementById('paciente-email').value,
+        telefone: document.getElementById('paciente-telefone').value
+    };
+
+    await adicionarItem('pacientes', novoPaciente);
+    formPaciente.reset();
+    mostrarMensagem(mensagemSucessoPaciente);
+    await atualizarTudo();
 });
 
+formRemedio.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
 
-// ==========================================
-// INICIALIZAÇÃO DA TELA (Quando a página abre)
-// ==========================================
-atualizarTela(); // Puxa os remédios
-atualizarTelaPacientes(); // Puxa os pacientes
+    const tipoSelecionado = document.querySelector('input[name="tipo"]:checked');
+    const novoRemedio = {
+        remedio: document.getElementById('remedio-nome').value,
+        dose: document.getElementById('remedio-dose').value,
+        tipo: tipoSelecionado ? tipoSelecionado.value : 'Não informado',
+        hora: document.getElementById('remedio-hora').value
+    };
+
+    await adicionarItem('remedios', novoRemedio);
+    formRemedio.reset();
+    mostrarMensagem(mensagemSucessoRemedio);
+    await atualizarTudo();
+});
+
+formBusca.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+    termoBuscaHistorico = buscaInput.value;
+    await atualizarTelaHistorico();
+});
+
+buscaInput.addEventListener('input', async () => {
+    if (buscaInput.value.trim() === '') {
+        termoBuscaHistorico = '';
+        await atualizarTelaHistorico();
+    }
+});
+
+listaPacientes.addEventListener('click', async (evento) => {
+    const botao = evento.target.closest('[data-delete-paciente]');
+
+    if (!botao) {
+        return;
+    }
+
+    await deletarPacienteERecarregar(Number(botao.dataset.deletePaciente));
+});
+
+listaHistorico.addEventListener('click', async (evento) => {
+    const botao = evento.target.closest('[data-delete-remedio]');
+
+    if (!botao) {
+        return;
+    }
+
+    await deletarRemedioERecarregar(Number(botao.dataset.deleteRemedio));
+});
+
+atualizarTudo();
