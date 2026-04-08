@@ -6,35 +6,90 @@
     <title>Histórico - LembreMED</title>
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <header class="app-header">
-        <div class="container">
-            <a href="inicio.html" class="logo">LembreMED</a>
-            <div class="user-info">
-                <span id="userNameDisplay" style="font-weight: 600;">Carregando...</span>
-                <button onclick="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sair</button>
+    <div class="app-layout">
+        <!-- Fixed Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="inicio.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">
+                        <i data-lucide="pill"></i>
+                    </div>
+                    <span>LembreMED</span>
+                </a>
             </div>
+            
+            <nav class="sidebar-nav">
+                <a href="inicio.html" class="sidebar-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="medicamentos.html" class="sidebar-item">
+                    <i data-lucide="calendar-check"></i>
+                    <span>Meus Remédios</span>
+                </a>
+                <a href="pacientes.html" class="sidebar-item">
+                    <i data-lucide="users"></i>
+                    <span>Pacientes</span>
+                </a>
+                <a href="historico.html" class="sidebar-item active">
+                    <i data-lucide="history"></i>
+                    <span>Histórico</span>
+                </a>
+                <a href="configuracoes.html" class="sidebar-item">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn btn-outline" style="width: 100%; justify-content: flex-start; border: none; padding: 1rem 1.5rem; background: transparent;">
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <header class="top-bar">
+                <button class="mobile-toggle" onclick="toggleSidebar()">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="user-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="text-align: right;">
+                        <span id="userNameDisplay" style="display: block; font-weight: 700; font-size: 0.95rem; color: var(--text-main);">Carregando...</span>
+                        <span style="font-size: 0.75rem; color: var(--text-sub); font-weight: 600;">Cuidador Principal</span>
+                    </div>
+                    <div class="user-avatar" style="width: 48px; height: 48px; background: var(--primary-light); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 800; font-size: 1.1rem; border: 2px solid white; box-shadow: var(--shadow-sm);">
+                        LM
+                    </div>
+                </div>
+            </header>
+
+            <main class="content-body animate-up">
+                <header style="margin-bottom: 3rem;">
+                    <h1 style="font-size: 2.25rem;">Histórico de Atividades</h1>
+                    <p>Acompanhe o registro completo de todas as medicações administradas.</p>
+                </header>
+
+                <div class="card">
+                    <div class="card-title"><h3>Registro de Doses</h3></div>
+                    <div id="historyListContainer" class="history-list"></div>
+                </div>
+            </main>
         </div>
-    </header>
-
-    <main class="container">
-        <nav class="sub-nav">
-            <a href="inicio.html" class="sub-nav-btn">Início</a>
-            <a href="pacientes.html" class="sub-nav-btn">Pacientes</a>
-            <a href="medicamentos.html" class="sub-nav-btn">Medicamentos</a>
-            <a href="historico.html" class="sub-nav-btn active">Histórico</a>
-        </nav>
-
-        <section id="caregiverHistory" class="animate-fade">
-            <div class="card">
-                <div class="card-title"><h3>Histórico de Medicações</h3></div>
-                <div id="historyListContainer" class="history-list"></div>
-            </div>
-        </section>
-    </main>
+    </div>
 
     <div id="notificationContainer" class="notification-container"></div>
     <script src="../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+    </script>
 </body>
 </html>

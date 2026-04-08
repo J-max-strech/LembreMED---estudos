@@ -6,87 +6,139 @@
     <title>Medicamentos - LembreMED</title>
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-    <header class="app-header">
-        <div class="container">
-            <a href="inicio.html" class="logo">LembreMED</a>
-            <div class="user-info">
-                <span id="userNameDisplay" style="font-weight: 600;">Carregando...</span>
-                <button onclick="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sair</button>
+    <div class="app-layout">
+        <!-- Fixed Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="inicio.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">
+                        <i data-lucide="pill"></i>
+                    </div>
+                    <span>LembreMED</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="inicio.html" class="sidebar-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="medicamentos.html" class="sidebar-item active">
+                    <i data-lucide="calendar-check"></i>
+                    <span>Meus Remédios</span>
+                </a>
+                <a href="pacientes.html" class="sidebar-item">
+                    <i data-lucide="users"></i>
+                    <span>Pacientes</span>
+                </a>
+                <a href="historico.html" class="sidebar-item">
+                    <i data-lucide="history"></i>
+                    <span>Histórico</span>
+                </a>
+                <a href="configuracoes.html" class="sidebar-item">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn btn-outline" style="width: 100%; justify-content: flex-start; border: none; padding: 1rem 1.5rem; background: transparent;">
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <header class="top-bar">
+                <button class="mobile-toggle" onclick="toggleSidebar()">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="user-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="text-align: right;">
+                        <span id="userNameDisplay" style="display: block; font-weight: 700; font-size: 0.95rem; color: var(--text-main);">Carregando...</span>
+                        <span style="font-size: 0.75rem; color: var(--text-sub); font-weight: 600;">Cuidador Principal</span>
+                    </div>
+                    <div class="user-avatar" style="width: 48px; height: 48px; background: var(--primary-light); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 800; font-size: 1.1rem; border: 2px solid white; box-shadow: var(--shadow-sm);">
+                        LM
+                    </div>
+                </div>
+            </header>
+
+            <main class="content-body animate-up">
+                <header style="margin-bottom: 3rem;">
+                    <h1 style="font-size: 2.25rem;">Meus Medicamentos</h1>
+                    <p>Gerencie todos os remédios e horários dos seus pacientes.</p>
+                </header>
+
+                <div class="card">
+                        <div class="card-title"><h3>Cadastrar Medicamento</h3></div>
+                        <form id="medFormCaregiver">
+                            <div class="form-group">
+                                <label for="mPatient">Vincular ao Paciente</label>
+                                <div class="custom-select-wrapper" id="patientSelectWrapper">
+                                    <div class="custom-select-trigger">
+                                        <span id="selectedPatientText">Selecione um paciente</span>
+                                        <div class="arrow"></div>
+                                    </div>
+                                    <div class="custom-options" id="patientOptionsContainer"></div>
+                                    <input type="hidden" id="mPatient" required>
+                                </div>
+                            </div>
+                            <div class="grid-opcoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label for="mName">Nome do Remédio</label>
+                                    <input type="text" id="mName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mDose">Dose (Ex: 500mg)</label>
+                                    <input type="text" id="mDose" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="grid-opcoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div class="form-group">
+                                    <label for="mTime">Horário</label>
+                                    <input type="time" id="mTime" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mFreq">Frequência</label>
+                                    <select id="mFreq" class="form-control" required>
+                                        <option value="Diário">Diário</option>
+                                        <option value="Uma vez por semana">Uma vez por semana</option>
+                                        <option value="2x ao dia (12/12h)">2x ao dia (12/12h)</option>
+                                        <option value="3x ao dia (8/8h)">3x ao dia (8/8h)</option>
+                                        <option value="4x ao dia (6/6h)">4x ao dia (6/6h)</option>
+                                        <option value="Dia sim, dia não">Dia sim, dia não</option>
+                                        <option value="Somente se houver dor">Somente se houver dor</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-large">Cadastrar Medicamento</button>
+                        </form>
+                    </div>
+                    <div class="card" style="margin-top: 2rem;">
+                        <div class="card-title"><h3>Medicamentos Salvos (IndexedDB)</h3></div>
+                        <div id="listaMedicamentosDB" class="med-list">
+                            <!-- Listagem do IndexedDB -->
+                        </div>
+                    </div>
+                </main>
             </div>
         </div>
-    </header>
-
-    <main class="container">
-        <nav class="sub-nav">
-            <a href="inicio.html" class="sub-nav-btn">Início</a>
-            <a href="pacientes.html" class="sub-nav-btn">Pacientes</a>
-            <a href="medicamentos.html" class="sub-nav-btn active">Medicamentos</a>
-            <a href="historico.html" class="sub-nav-btn">Histórico</a>
-        </nav>
-
-        <section id="medRegistration" class="animate-fade">
-            <div class="card">
-                <div class="card-title"><h3>Cadastrar Medicamento</h3></div>
-                <form id="medFormCaregiver">
-                    <div class="form-group">
-                        <label for="mPatient">Vincular ao Paciente</label>
-                        <div class="custom-select-wrapper" id="patientSelectWrapper">
-                            <div class="custom-select-trigger">
-                                <span id="selectedPatientText">Selecione um paciente</span>
-                                <div class="arrow"></div>
-                            </div>
-                            <div class="custom-options" id="patientOptionsContainer"></div>
-                            <input type="hidden" id="mPatient" required>
-                        </div>
-                    </div>
-                    <div class="grid-opcoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label for="mName">Nome do Remédio</label>
-                            <input type="text" id="mName" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="mDose">Dose (Ex: 500mg)</label>
-                            <input type="text" id="mDose" class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="grid-opcoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label for="mTime">Horário</label>
-                            <input type="time" id="mTime" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="mFreq">Frequência</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger">
-                                    <span class="selected-text">Diário</span>
-                                    <div class="arrow"></div>
-                                </div>
-                                <div class="custom-options">
-                                    <div class="custom-option selected" data-value="Diário">Diário</div>
-                                    <div class="custom-option" data-value="2x ao dia">2x ao dia</div>
-                                    <div class="custom-option" data-value="3x ao dia">3x ao dia</div>
-                                </div>
-                                <input type="hidden" id="mFreq" value="Diário" required>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-large">Cadastrar Medicamento</button>
-                </form>
-            </div>
-            <div class="card" style="margin-top: 2rem;">
-                <div class="card-title"><h3>Medicamentos Salvos (IndexedDB)</h3></div>
-                <div id="listaMedicamentosDB" class="med-list">
-                    <!-- Listagem do IndexedDB -->
-                </div>
-            </div>
-        </section>
-    </main>
 
     <div id="notificationContainer" class="notification-container"></div>
     <script src="../js/script.js"></script>
     <script src="../db.js"></script>
     <script src="../controller.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+    </script>
 </body>
 </html>

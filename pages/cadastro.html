@@ -3,52 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - LembreMED</title>
+    <title>Criar Conta - LembreMED</title>
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="auth-page">
     <div class="auth-card animate-fade" style="max-width: 550px;">
         <div class="auth-header">
-            <h1>Criar Conta</h1>
-            <p>Comece a organizar sua saúde agora.</p>
+            <h1>Começar Agora</h1>
+            <p>Sua saúde organizada em um só lugar.</p>
         </div>
 
         <form id="signupForm">
             <div class="form-group">
-                <label for="nome">Nome Completo</label>
-                <input type="text" id="nome" class="form-control" placeholder="Seu nome" required>
+                <label for="nome">Seu Nome Completo</label>
+                <input type="text" id="nome" class="form-control" placeholder="Como você quer ser chamado?" required>
             </div>
 
             <div class="form-group">
-                <label for="email">E-mail</label>
+                <label for="email">Seu Melhor E-mail</label>
                 <input type="email" id="email" class="form-control" placeholder="seu@email.com" required>
             </div>
 
             <div class="form-group">
-                <label for="password">Senha</label>
+                <label for="password">Crie uma Senha</label>
                 <input type="password" id="password" class="form-control" placeholder="Mínimo 6 caracteres" minlength="6" required>
             </div>
 
             <div class="form-group">
-                <label>Você é:</label>
+                <label>Você usará o sistema como:</label>
                 <div class="role-group">
                     <label class="role-box">
                         <input type="radio" name="role" value="paciente" checked>
-                        <span>Paciente</span>
+                        <span>
+                            <strong style="display: block; margin-bottom: 4px;">Paciente</strong>
+                            <small style="font-weight: 500; opacity: 0.8;">Vou gerenciar minha rotina</small>
+                        </span>
                     </label>
                     <label class="role-box">
                         <input type="radio" name="role" value="cuidador">
-                        <span>Cuidador</span>
+                        <span>
+                            <strong style="display: block; margin-bottom: 4px;">Cuidador</strong>
+                            <small style="font-weight: 500; opacity: 0.8;">Vou ajudar outra pessoa</small>
+                        </span>
                     </label>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-large">Criar Conta</button>
+            <button type="submit" class="btn btn-primary btn-large" style="margin-top: 1rem;">Criar Minha Conta</button>
         </form>
 
-        <div class="auth-footer" style="text-align: center; margin-top: 1.5rem;">
-            <p>Já tem uma conta? <a href="login.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Faça login</a></p>
+        <div class="auth-footer" style="text-align: center; margin-top: 2rem;">
+            <p>Já possui acesso? <a href="login.html" style="color: var(--primary); font-weight: 700; text-decoration: none;">Faça login aqui</a></p>
         </div>
     </div>
 

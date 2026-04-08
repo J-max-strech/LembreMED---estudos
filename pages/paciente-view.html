@@ -6,185 +6,308 @@
     <title>Minha Rotina - LembreMED</title>
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .section-content { display: none; }
-        .section-content.active { display: block; }
-        .disease-item {
-            background: var(--white);
-            padding: 1.2rem;
-            border-radius: 18px;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #F0F0F0;
-            box-shadow: var(--shadow);
+        .section-content.active { display: block; animation: fadeIn 0.5s ease; }
+        
+        /* Local overrides for buttons in sidebar */
+        .sidebar-nav button.sidebar-item {
+            width: 100%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
         }
     </style>
 </head>
 <body>
-    <header class="app-header">
-        <div class="container">
-            <a href="paciente-view.html" class="logo">LembreMED</a>
-            <div class="user-info">
-                <span id="userNameDisplay" style="font-weight: 600;">Olá, Paciente</span>
-                <button onclick="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem;">Sair</button>
+    <div class="app-layout">
+        <!-- Fixed Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="paciente-view.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">L</div>
+                    <span>LembreMED</span>
+                </a>
             </div>
-        </div>
-    </header>
+            
+            <nav class="sidebar-nav">
+                <button class="sidebar-item sub-nav-btn active" onclick="showSection('inicio', this)">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Início</span>
+                </button>
+                <button class="sidebar-item sub-nav-btn" onclick="showSection('medicamentos', this)">
+                    <i data-lucide="pill"></i>
+                    <span>Medicamentos</span>
+                </button>
+                <button class="sidebar-item sub-nav-btn" onclick="showSection('doencas', this)">
+                    <i data-lucide="activity"></i>
+                    <span>Doenças</span>
+                </button>
+                <button class="sidebar-item sub-nav-btn" onclick="showSection('historico', this)">
+                    <i data-lucide="history"></i>
+                    <span>Meu Histórico</span>
+                </button>
+                <button class="sidebar-item sub-nav-btn" onclick="showSection('configuracoes', this)">
+                    <i data-lucide="settings"></i>
+                    <span>Ajustes</span>
+                </button>
+            </nav>
 
-    <main class="container">
-        <!-- Sub-navegação do Paciente -->
-        <nav class="sub-nav">
-            <button class="sub-nav-btn active" onclick="showSection('inicio', this)">Início</button>
-            <button class="sub-nav-btn" onclick="showSection('medicamentos', this)">Meus Medicamentos</button>
-            <button class="sub-nav-btn" onclick="showSection('doencas', this)">Minhas Doenças</button>
-            <button class="sub-nav-btn" onclick="showSection('historico', this)">Histórico</button>
-        </nav>
-
-        <!-- Seção: Início (Destaque para Próximo Medicamento) -->
-        <section id="section-inicio" class="section-content active animate-fade">
-            <div class="dashboard-grid">
-                <div class="card chart-container">
-                    <h3 style="font-size: 1rem; margin-bottom: 1rem;">Minha Adesão Hoje</h3>
-                    <svg viewBox="0 0 36 36" class="circular-chart">
-                        <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <path id="patientAdherenceCircle" class="circle primary" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        <text x="18" y="20.35" class="percentage" id="patientAdherenceText">0%</text>
-                    </svg>
-                    <p style="font-size: 0.8rem; color: var(--text-light); margin-top: 1rem;">Doses tomadas vs. agendadas</p>
-                </div>
-                <div id="nextDoseContainer"></div>
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn btn-outline" style="width: 100%; justify-content: flex-start; border: none; padding: 1rem 1.5rem; background: transparent;">
+                    <i data-lucide="log-out"></i>
+                    Sair
+                </button>
             </div>
+        </aside>
 
-            <div class="card" id="upcomingMedsCard" style="display: none;">
-                <div class="card-title">
-                    <h3>Próximas Doses de Hoje</h3>
-                </div>
-                <div id="upcomingMedsList" class="med-list"></div>
-            </div>
-        </section>
-
-        <!-- Seção: Meus Medicamentos -->
-        <section id="section-medicamentos" class="section-content animate-fade">
-            <div class="card">
-                <div class="card-title">
-                    <h3>Meus Medicamentos</h3>
-                    <button class="btn btn-primary" onclick="openAddMedModal()">+ Adicionar</button>
-                </div>
-                <div id="medListContainer" class="med-list"></div>
-            </div>
-        </section>
-
-        <!-- Seção: Minhas Doenças -->
-        <section id="section-doencas" class="section-content animate-fade">
-            <div class="card">
-                <div class="card-title">
-                    <h3>Minhas Doenças</h3>
-                    <button class="btn btn-primary" onclick="openAddDiseaseModal()">+ Adicionar</button>
-                </div>
-                <div id="diseaseListContainer" class="med-list">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Seção: Histórico -->
-        <section id="section-historico" class="section-content animate-fade">
-            <div class="card">
-                <div class="card-title">
-                    <h3>Meu Histórico de Doses</h3>
-                </div>
-                <div id="patientHistoryContainer" class="history-list">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Modal para Novo Medicamento -->
-    <div id="medPatientModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Novo Medicamento</h2>
-                <button class="close-modal" onclick="closeModal('medPatientModal')">&times;</button>
-            </div>
-            <form id="medFormPatient">
-                <input type="hidden" id="medId">
-                <div class="form-group">
-                    <label for="medName">Nome do Medicamento</label>
-                    <input type="text" id="medName" class="form-control" placeholder="Ex: Metformina" required>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <div class="form-group">
-                        <label for="medDose">Dosagem</label>
-                        <input type="text" id="medDose" class="form-control" placeholder="Ex: 500mg" required>
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <header class="top-bar">
+                <button class="mobile-toggle" onclick="toggleSidebar()">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="user-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="text-align: right;">
+                        <span id="userNameDisplay" style="display: block; font-weight: 700; font-size: 0.95rem;">Olá, Paciente</span>
+                        <span style="font-size: 0.75rem; color: var(--text-sub); font-weight: 600;">Modo Paciente</span>
                     </div>
-                    <div class="form-group">
-                        <label for="medTime">Horário</label>
-                        <input type="time" id="medTime" class="form-control" required>
+                    <div class="user-avatar" style="width: 48px; height: 48px; background: #dcfce7; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #16a34a; font-weight: 800; border: 2px solid white; box-shadow: var(--shadow-sm);">
+                        P
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="medFreq">Frequência</label>
-                    <input type="text" id="medFreq" class="form-control" placeholder="Ex: Todos os dias, 12/12h">
-                </div>
-                <div class="form-group">
-                    <label for="medDisease">Relacionar com Doença (Opcional)</label>
-                    <select id="medDisease" class="form-control" style="appearance: auto; background-image: none; padding-right: 1.4rem;">
-                        <option value="">Nenhuma</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary btn-large">Salvar Medicamento</button>
-            </form>
-        </div>
-    </div>
+            </header>
 
-    <!-- Modal para Doenças -->
-    <div id="diseaseModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>Cadastrar Doença</h2>
-                <button class="close-modal" onclick="closeModal('diseaseModal')">&times;</button>
+            <main class="content-body animate-up">
+                <!-- Seção: Início -->
+                <section id="section-inicio" class="section-content active">
+                    <header style="margin-bottom: 3rem;">
+                        <h1 style="font-size: 2.25rem;">Olá! Como você está hoje?</h1>
+                        <p>Aqui está o que você precisa tomar agora.</p>
+                    </header>
+
+                    <div class="dashboard-grid">
+                        <div class="card chart-container">
+                            <div class="card-title" style="width: 100%;">
+                                <h3 style="font-size: 1.2rem;">Minha Adesão</h3>
+                            </div>
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <defs>
+                                    <linearGradient id="pGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#22c55e" />
+                                        <stop offset="100%" stop-color="#16a34a" />
+                                    </linearGradient>
+                                </defs>
+                                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path id="patientAdherenceCircle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <text x="18" y="20.35" class="percentage" id="patientAdherenceText">0%</text>
+                            </svg>
+                            <p style="margin-top: 1.5rem; font-weight: 700; color: var(--text-main);">Doses concluídas hoje</p>
+                        </div>
+                        <div id="nextDoseContainer"></div>
+                    </div>
+
+                    <div class="card" id="upcomingMedsCard" style="display: none; margin-top: 2rem; padding: 2.5rem;">
+                        <div class="card-title">
+                            <h3>Próximas Doses</h3>
+                        </div>
+                        <div id="upcomingMedsList" class="med-list"></div>
+                    </div>
+                </section>
+
+                <!-- Seção: Meus Medicamentos -->
+                <section id="section-medicamentos" class="section-content">
+                    <div class="card">
+                        <div class="card-title">
+                            <h3>Meus Medicamentos</h3>
+                            <button class="btn btn-primary" onclick="openAddMedModal()">
+                                <i data-lucide="plus-circle"></i>
+                                Novo Remédio
+                            </button>
+                        </div>
+                        <p style="margin-bottom: 2.5rem;">Gerencie todos os medicamentos cadastrados na sua rotina.</p>
+                        <div id="medListContainer" class="med-list"></div>
+                    </div>
+                </section>
+
+                <!-- Seção: Minhas Doenças -->
+                <section id="section-doencas" class="section-content">
+                    <div class="card">
+                        <div class="card-title">
+                            <h3>Condições de Saúde</h3>
+                            <button class="btn btn-primary" onclick="openAddDiseaseModal()">
+                                <i data-lucide="plus-circle"></i>
+                                Adicionar
+                            </button>
+                        </div>
+                        <p style="margin-bottom: 2.5rem;">Registro de doenças ou sintomas monitorados.</p>
+                        <div id="diseaseListContainer" class="med-list"></div>
+                    </div>
+                </section>
+
+                <!-- Seção: Histórico -->
+                <section id="section-historico" class="section-content">
+                    <div class="card">
+                        <div class="card-title">
+                            <h3>Registro de Atividades</h3>
+                        </div>
+                        <p style="margin-bottom: 2.5rem;">Log completo das doses tomadas nos últimos dias.</p>
+                        <div id="patientHistoryContainer" class="history-list"></div>
+                    </div>
+                </section>
+
+                <!-- Seção: Ajustes -->
+                <section id="section-configuracoes" class="section-content">
+                    <header style="margin-bottom: 3rem;">
+                        <h1 style="font-size: 2.25rem;">Ajustes</h1>
+                        <p>Personalize sua experiência no LembreMED.</p>
+                    </header>
+
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <div class="card-title">
+                                <h3>Seu Perfil</h3>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Seu Nome</label>
+                                <input type="text" id="patientConfigName" class="form-control" placeholder="Como quer ser chamado">
+                            </div>
+                            <button class="btn btn-primary" onclick="savePatientProfileConfig()">Salvar Nome</button>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-title">
+                                <h3>Preferências</h3>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Tamanho da Letra</label>
+                                <select id="fontSizeSelect" class="form-control" onchange="updateFontSize(this.value)">
+                                    <option value="normal">Normal</option>
+                                    <option value="large">Grande</option>
+                                    <option value="xl">Extra Grande</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid var(--border);">
+                                    <label style="margin: 0; font-size: 1rem;">Som de Alerta</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="soundNotif" checked onchange="saveSoundPref(this.checked)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="border-color: #fee2e2; margin-top: 2rem;">
+                        <div class="card-title">
+                            <h3 style="color: var(--alert);">Zona Crítica</h3>
+                        </div>
+                        <p style="margin-bottom: 1.5rem;">Apagar todos os seus medicamentos e histórico salvos neste dispositivo.</p>
+                        <button class="btn btn-outline" style="color: var(--alert); border-color: #fee2e2;" onclick="clearAllData()">Limpar Meus Dados</button>
+                    </div>
+                </section>
+                </main>
+                </div>
+                </div>
+
+                <!-- Modals -->
+                <!-- ... (rest of modals) ... -->
+
+                <div id="adminPasswordModal" class="modal-overlay">
+        <div class="modal" style="max-width: 450px; text-align: center; padding: 3rem;">
+            <div style="width: 80px; height: 80px; background: #fee2e2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem;">
+                <i data-lucide="shield-alert"></i>
             </div>
-            <form id="diseaseForm">
-                <input type="hidden" id="diseaseId">
-                <div class="form-group">
-                    <label for="diseaseName">Nome da Doença/Condição</label>
-                    <input type="text" id="diseaseName" class="form-control" placeholder="Ex: Diabetes Tipo 2" required>
-                </div>
-                <div class="form-group">
-                    <label for="diseaseNote">Observação (Opcional)</label>
-                    <textarea id="diseaseNote" class="form-control" style="min-height: 100px; resize: vertical;" placeholder="Ex: Diagnosticado em 2020"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-large">Salvar Doença</button>
-            </form>
-        </div>
-    </div>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: var(--text-main);">Ação Irreversível!</h3>
+            <p style="margin-bottom: 2rem; font-size: 1rem; color: var(--text-sub);">Você está prestes a apagar <strong>TODOS</strong> os seus dados salvos. Esta ação não pode ser desfeita e todas as informações serão perdidas permanentemente.</p>
+            
+            <div class="form-group" style="text-align: left; margin-bottom: 2rem;">
+                <label style="font-weight: 700; color: var(--text-main);">Digite a Senha de Administrador</label>
+                <input type="password" id="adminPassInput" class="form-control" placeholder="••••••••••••">
+            </div>
 
-    <!-- Modal de Confirmação Moderno -->
-    <div id="confirmModal" class="modal-overlay">
-        <div class="modal" style="max-width: 400px; text-align: center; padding: 2.5rem;">
-            <div id="confirmIcon" style="font-size: 4rem; margin-bottom: 1.5rem;">⚠️</div>
-            <h2 id="confirmTitle" style="margin-bottom: 1rem; color: var(--text);">Confirmar Ação</h2>
-            <p id="confirmMessage" style="color: var(--text-light); margin-bottom: 2rem; line-height: 1.5;">Tem certeza que deseja realizar esta operação?</p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <button class="btn btn-outline" onclick="closeModal('confirmModal')">Cancelar</button>
-                <button id="btnConfirmAction" class="btn btn-danger">Confirmar</button>
+                <button class="btn btn-outline" onclick="closeModal('adminPasswordModal')">Cancelar</button>
+                <button class="btn btn-primary btn-danger-confirm" onclick="confirmClearWithPassword()">Confirmar Limpeza</button>
             </div>
         </div>
     </div>
 
     <div id="notificationContainer" class="notification-container"></div>
-    <script src="../js/script.js"></script>
-    <script src="../db.js"></script>
-    <script src="../controller.js"></script>
-    <script>
-        // Sobrescrever ou estender funções globais se necessário
-        document.addEventListener('DOMContentLoaded', () => {
-            // Inicializar a primeira aba
-            renderPatientMeds();
-        });
-    </script>
-</body>
-</html>
+                <script src="../js/script.js"></script>
+                <script src="../db.js"></script>
+                <script src="../controller.js"></script>
+                <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+                renderPatientMeds();
+
+                // Populate settings
+                const user = JSON.parse(localStorage.getItem('lembremed_user'));
+                if (user && document.getElementById('patientConfigName')) {
+                document.getElementById('patientConfigName').value = user.nome;
+                }
+
+                // Populate preferences
+                const fontSize = localStorage.getItem('lembremed_font_size') || 'normal';
+                if (document.getElementById('fontSizeSelect')) {
+                document.getElementById('fontSizeSelect').value = fontSize;
+                }
+
+                const soundPref = localStorage.getItem('lembremed_sound_notif') !== 'false';
+                if (document.getElementById('soundNotif')) {
+                document.getElementById('soundNotif').checked = soundPref;
+                }
+                });
+
+                function updateFontSize(size) {
+                localStorage.setItem('lembremed_font_size', size);
+                applyGlobalSettings();
+                showNotification('Fonte Atualizada', 'O tamanho da letra foi alterado.', '🔤');
+                }
+
+                function saveSoundPref(enabled) {
+                localStorage.setItem('lembremed_sound_notif', enabled);
+                showNotification('Preferência Salva', enabled ? 'Sons ativados.' : 'Sons desativados.', '🔊');
+                }
+
+                function savePatientProfileConfig() {
+                const newName = document.getElementById('patientConfigName').value;
+                const user = JSON.parse(localStorage.getItem('lembremed_user'));
+                if (user && newName) {
+                user.nome = newName;
+                localStorage.setItem('lembremed_user', JSON.stringify(user));
+                showNotification('Perfil Salvo', 'Seu nome foi atualizado.', '👤');
+                setTimeout(() => window.location.reload(), 1000);
+                }
+                }
+
+        function clearAllData() {
+            document.getElementById('adminPassInput').value = '';
+            openModal('adminPasswordModal');
+        }
+
+        function confirmClearWithPassword() {
+            const pass = document.getElementById('adminPassInput').value;
+            
+            if (pass === 'adminlembremed') {
+                localStorage.removeItem('lembremed_meds');
+                localStorage.removeItem('lembremed_history');
+                localStorage.removeItem('lembremed_diseases');
+                
+                closeModal('adminPasswordModal');
+                showNotification('Dados Removidos', 'Sua rotina foi limpa.', '🗑️');
+                
+                setTimeout(() => window.location.reload(), 1500);
+            } else {
+                showNotification('Senha Incorreta', 'Acesso negado para limpeza de dados.', '❌');
+            }
+        }
+                </script>
+                </body>
+                </html>

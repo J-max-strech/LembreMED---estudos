@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - LembreMED</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Fixed Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="inicio.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon">
+                        <i data-lucide="pill"></i>
+                    </div>
+                    <span>LembreMED</span>
+                </a>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="inicio.html" class="sidebar-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="medicamentos.html" class="sidebar-item">
+                    <i data-lucide="calendar-check"></i>
+                    <span>Meus Remédios</span>
+                </a>
+                <a href="pacientes.html" class="sidebar-item">
+                    <i data-lucide="users"></i>
+                    <span>Pacientes</span>
+                </a>
+                <a href="historico.html" class="sidebar-item">
+                    <i data-lucide="history"></i>
+                    <span>Histórico</span>
+                </a>
+                <a href="configuracoes.html" class="sidebar-item active">
+                    <i data-lucide="settings"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button onclick="logout()" class="btn btn-outline" style="width: 100%; justify-content: flex-start; border: none; padding: 1rem 1.5rem; background: transparent;">
+                    <i data-lucide="log-out"></i>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <header class="top-bar">
+                <button class="mobile-toggle" onclick="toggleSidebar()">
+                    <i data-lucide="menu"></i>
+                </button>
+                <div class="user-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="text-align: right;">
+                        <span id="userNameDisplay" style="display: block; font-weight: 700; font-size: 0.95rem; color: var(--text-main);">Carregando...</span>
+                        <span style="font-size: 0.75rem; color: var(--text-sub); font-weight: 600;">Cuidador Principal</span>
+                    </div>
+                    <div class="user-avatar" style="width: 48px; height: 48px; background: var(--primary-light); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 800; font-size: 1.1rem; border: 2px solid white; box-shadow: var(--shadow-sm);">
+                        LM
+                    </div>
+                </div>
+            </header>
+
+            <main class="content-body animate-up">
+                <header style="margin-bottom: 3rem;">
+                    <h1 style="font-size: 2.25rem;">Configurações</h1>
+                    <p>Gerencie suas preferências e os dados do sistema.</p>
+                </header>
+
+                <div class="dashboard-grid">
+                    <!-- Profile Card -->
+                    <div class="card">
+                        <div class="card-title">
+                            <h3>Perfil e Conta</h3>
+                        </div>
+                        <div class="form-group">
+                            <label>Nome do Usuário</label>
+                            <input type="text" id="configUserName" class="form-control" placeholder="Seu nome">
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail de Contato</label>
+                            <input type="email" id="configUserEmail" class="form-control" placeholder="seu@email.com" readonly>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveProfileConfig()">Salvar Alterações</button>
+                    </div>
+
+                    <!-- App Settings -->
+                    <div class="card">
+                        <div class="card-title">
+                            <h3>Preferências do Aplicativo</h3>
+                        </div>
+                        <div class="form-group">
+                            <label>Tamanho da Fonte</label>
+                            <select id="fontSizeSelect" class="form-control" onchange="updateFontSize(this.value)">
+                                <option value="normal">Padrão</option>
+                                <option value="large">Grande (Acessibilidade)</option>
+                                <option value="xl">Muito Grande</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid var(--border);">
+                                <div>
+                                    <label style="margin: 0; font-size: 1rem;">Notificações Sonoras</label>
+                                    <p style="font-size: 0.8rem; margin: 0;">Tocar alerta nos horários dos remédios</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="soundNotif" checked onchange="saveSoundPref(this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="card" style="border-color: #fee2e2; margin-top: 2rem;">
+                    <div class="card-title">
+                        <h3 style="color: var(--alert);">Zona de Perigo</h3>
+                    </div>
+                    <p style="margin-bottom: 1.5rem;">Cuidado: estas ações são irreversíveis e apagam todos os dados armazenados.</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-outline" style="border-color: #fee2e2; color: var(--alert);" onclick="clearAllData()">Limpar Todo o Banco de Dados</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="adminPasswordModal" class="modal-overlay">
+        <div class="modal" style="max-width: 450px; text-align: center; padding: 3rem;">
+            <div style="width: 80px; height: 80px; background: #fee2e2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem;">
+                <i data-lucide="shield-alert"></i>
+            </div>
+            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: var(--text-main);">Ação Irreversível!</h3>
+            <p style="margin-bottom: 2rem; font-size: 1rem; color: var(--text-sub);">Você está prestes a apagar <strong>TODO</strong> o banco de dados. Esta ação não pode ser desfeita e todas as informações serão perdidas permanentemente.</p>
+            
+            <div class="form-group" style="text-align: left; margin-bottom: 2rem;">
+                <label style="font-weight: 700; color: var(--text-main);">Digite a Senha de Administrador</label>
+                <input type="password" id="adminPassInput" class="form-control" placeholder="••••••••••••">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <button class="btn btn-outline" onclick="closeModal('adminPasswordModal')">Cancelar</button>
+                <button class="btn btn-primary btn-danger-confirm" onclick="confirmClearWithPassword()">Confirmar Limpeza</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notificationContainer" class="notification-container"></div>
+    <script src="../js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            
+            // Populate config fields
+            const user = JSON.parse(localStorage.getItem('lembremed_user'));
+            if (user) {
+                document.getElementById('configUserName').value = user.nome;
+                document.getElementById('configUserEmail').value = user.email;
+            }
+
+            // Populate preferences
+            const fontSize = localStorage.getItem('lembremed_font_size') || 'normal';
+            document.getElementById('fontSizeSelect').value = fontSize;
+
+            const soundPref = localStorage.getItem('lembremed_sound_notif') !== 'false';
+            document.getElementById('soundNotif').checked = soundPref;
+        });
+
+        function updateFontSize(size) {
+            localStorage.setItem('lembremed_font_size', size);
+            applyGlobalSettings();
+            showNotification('Fonte Atualizada', 'O tamanho da letra foi alterado.', '🔤');
+        }
+
+        function saveSoundPref(enabled) {
+            localStorage.setItem('lembremed_sound_notif', enabled);
+            showNotification('Preferência Salva', enabled ? 'Sons ativados.' : 'Sons desativados.', '🔊');
+        }
+
+        function saveProfileConfig() {
+            const newName = document.getElementById('configUserName').value;
+            const user = JSON.parse(localStorage.getItem('lembremed_user'));
+            if (user && newName) {
+                user.nome = newName;
+                localStorage.setItem('lembremed_user', JSON.stringify(user));
+                showNotification('Perfil Atualizado', 'Suas alterações foram salvas com sucesso.', '👤');
+                setTimeout(() => window.location.reload(), 1000);
+            }
+        }
+
+        function clearAllData() {
+            document.getElementById('adminPassInput').value = '';
+            openModal('adminPasswordModal');
+        }
+
+        function confirmClearWithPassword() {
+            const pass = document.getElementById('adminPassInput').value;
+            
+            if (pass === 'adminlembremed') {
+                localStorage.removeItem('lembremed_patients');
+                localStorage.removeItem('lembremed_meds');
+                localStorage.removeItem('lembremed_meds_global');
+                localStorage.removeItem('lembremed_history');
+                localStorage.removeItem('lembremed_diseases');
+                
+                closeModal('adminPasswordModal');
+                showNotification('Banco de Dados Limpo', 'Todas as informações foram removidas.', '🗑️');
+                
+                setTimeout(() => window.location.href = 'inicio.html', 1500);
+            } else {
+                showNotification('Senha Incorreta', 'Acesso negado para limpeza de dados.', '❌');
+            }
+        }
+    </script>
+</body>
+</html>

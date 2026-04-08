@@ -2,6 +2,16 @@
  * LembreMED - Core Logic (Modular Version)
  */
 
+// --- Global Settings ---
+
+function applyGlobalSettings() {
+    const fontSize = localStorage.getItem('lembremed_font_size') || 'normal';
+    document.body.classList.remove('font-large', 'font-xl');
+    if (fontSize !== 'normal') {
+        document.body.classList.add('font-' + fontSize);
+    }
+}
+
 // --- Authentication & Session ---
 
 function checkAuth() {
@@ -79,15 +89,12 @@ function showNotification(title, message, icon = '✓') {
 
     container.appendChild(toast);
     
-    // Animação de entrada suave
-    requestAnimationFrame(() => {
-        toast.style.transform = 'translateX(0)';
-        toast.classList.add('show');
-    });
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 100);
 
+    // Auto-remove
     setTimeout(() => {
         toast.classList.remove('show');
-        toast.style.transform = 'translateX(120%)';
         setTimeout(() => toast.remove(), 500);
     }, 4000);
 }
@@ -599,12 +606,36 @@ function initCustomSelect() {
     });
 }
 
+// --- Sidebar Toggle (Mobile) ---
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('open');
+    }
+}
+
+// Close sidebar on click outside (Mobile)
+document.addEventListener('click', (e) => {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-toggle');
+    if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) {
+        if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+            sidebar.classList.remove('open');
+        }
+    }
+});
+
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
+    applyGlobalSettings();
     checkAuth();
     
-    const path = window.location.pathname;
+    // Initialize Lucide Icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 
     // Inicialização baseada na página
     if (path.endsWith('inicio.html')) renderCaregiverDashboard();
