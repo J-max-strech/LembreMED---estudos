@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>S.I.C.U. - Módulo de Acesso Cidadão</title>
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px;
+            color: #dcdcdc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #f0f0f0;
+            color: #c0c0c0;
+            padding: 5px;
+            border-bottom: 4px solid #e0e0e0;
+        }
+
+        .header h1 {
+            font-size: 14px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        marquee {
+            background-color: #ffffff;
+            color: #d3d3d3;
+            font-weight: bold;
+            padding: 3px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .container {
+            width: 780px;
+            margin: 10px auto;
+            background-color: #ffffff;
+            border: 1px solid #e8e8e8;
+            padding: 10px;
+            position: relative;
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        td { border: 1px solid #f5f5f5; padding: 4px; vertical-align: middle; }
+        .label-bg { background-color: #fafafa; font-weight: bold; width: 35%; text-align: right; color: #cccccc; }
+
+        input[type="text"], input[type="password"], select, textarea {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 12px;
+            border: 1px inset #eee;
+            padding: 2px;
+            color: #c0c0c0;
+            background-color: #ffffff;
+        }
+
+        textarea { resize: none; }
+
+        .botoes { text-align: center; margin-top: 20px; background-color: #ffffff; padding: 10px; border: 1px solid #eee; }
+        
+        button {
+            background-color: #f9f9f9;
+            border: 2px outset #fff;
+            padding: 5px 15px;
+            font-family: Arial;
+            font-size: 11px;
+            cursor: pointer;
+            margin: 0 5px;
+            color: #b0b0b0;
+        }
+
+        button:active { border: 2px inset #fff; }
+
+        #modal-carregando {
+            display: none; position: fixed; top: 40%; left: 40%; background: white;
+            border: 2px solid #ccc; padding: 20px; text-align: center; font-weight: bold;
+            box-shadow: 5px 5px 0px #eee; z-index: 1000; color: #d3d3d3;
+        }
+
+        .transparencia { margin-top: 30px; border: 2px dashed #eee; background-color: #fafafa; padding: 10px; }
+        .transparencia h3 { margin-top: 0; color: #cccccc; font-size: 12px; border-bottom: 1px solid #eee; }
+        ul { list-style-type: square; padding-left: 20px; }
+        li { margin-bottom: 5px; border-bottom: 1px dotted #eee; padding-bottom: 5px; }
+        .nota-rodape { font-size: 9px; color: #e0e0e0; margin-top: 30px; border-top: 1px dashed #eee; padding-top: 5px; }
+        .destaque-inutil { color: #c0c0c0; font-size: 9px; }
+        #erro-escondido { position: fixed; bottom: 2px; right: 5px; font-size: 8px; color: #8b0000; font-weight: normal; z-index: 9999; }
+
+        /* ================= ESTILOS DOS CAPTCHAS ================= */
+        #area-captchas {
+            border: 2px dotted #e0e0e0;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #fcfcfc;
+        }
+
+        .etapa-captcha { display: none; }
+        .etapa-captcha.ativa { display: block; }
+
+        /* Captcha 1 - Imagem */
+        #canvas-captcha { border: 1px solid #eee; background-color: #fff; cursor: crosshair; }
+
+        /* Captcha 2 - Drag & Drop */
+        .drag-container { display: flex; justify-content: space-around; margin-top: 10px; }
+        .draggable { 
+            width: 80px; height: 30px; border: 1px solid #ccc; background-color: #f0f0f0; 
+            text-align: center; line-height: 30px; cursor: grab; font-size: 10px; color: #a0a0a0;
+        }
+        .dropzone { 
+            width: 90px; height: 40px; border: 1px dashed #bbb; background-color: #fff; 
+            text-align: center; line-height: 40px; font-size: 9px; color: #e0e0e0;
+        }
+        
+        /* Captcha 3 - Sequência */
+        #grid-botoes {
+            display: grid; grid-template-columns: repeat(3, 50px); gap: 5px; justify-content: center; margin-top: 10px;
+        }
+        .btn-seq { width: 50px; height: 50px; background-color: #f9f9f9; border: 1px solid #ddd; cursor: pointer; color: transparent;}
+        .btn-seq:active { background-color: #e0e0e0; }
+
+        /* Bloqueio do Formulário Principal */
+        #form-bloqueado-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d3d3d3;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #container-form-principal { position: relative; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Ministério da Burocracia - Departamento de Formulários Complexos (DFC)</h1>
+        <p style="font-size: 10px; margin: 2px 0;">S.I.C.U. v1.0.7.2f - Módulo de Triagem Humana Ativado</p>
+    </div>
+
+    <marquee scrollamount="3">AVISO: O preenchimento com caneta azul no formulário digital invalida o requerimento. Para acessar o formulário, comprove sua existência carbônica nos 3 testes abaixo.</marquee>
+
+    <div class="container">
+        
+        <div id="area-captchas">
+            <h3 style="color:#cccccc; margin-top:0;">Filtro de Requerentes (Portaria 99/2012)</h3>
+            
+            <div id="captcha-fase1" class="etapa-captcha ativa">
+                <p><strong>Fase 1/3:</strong> Transcreva o código holográfico abaixo (respeite as maiúsculas e minúsculas que você não consegue ver direito):</p>
+                <canvas id="canvas-captcha" width="150" height="50"></canvas><br>
+                <input type="text" id="input-cap1" size="10" placeholder="Código">
+                <button type="button" onclick="verificarFase1()">Avançar</button>
+            </div>
+
+            <div id="captcha-fase2" class="etapa-captcha">
+                <p><strong>Fase 2/3:</strong> Organize a mesa do servidor. Arraste os processos para as caixas de entrada corretas (mas preste atenção nas etiquetas rasgadas).</p>
+                <div class="drag-container" id="origem-drag">
+                    <div class="draggable" draggable="true" id="proc-a" ondragstart="drag(event)">Proc. 199/A</div>
+                    <div class="draggable" draggable="true" id="proc-b" ondragstart="drag(event)">Proc. 042/X</div>
+                    <div class="draggable" draggable="true" id="proc-c" ondragstart="drag(event)">Ofício S/N</div>
+                </div>
+                <div class="drag-container">
+                    <div class="dropzone" id="drop-x" ondrop="drop(event)" ondragover="allowDrop(event)">Caixa X (Pendente)</div>
+                    <div class="dropzone" id="drop-sn" ondrop="drop(event)" ondragover="allowDrop(event)">Gaveta (Ofícios)</div>
+                    <div class="dropzone" id="drop-a" ondrop="drop(event)" ondragover="allowDrop(event)">Caixa A (Urgente)</div>
+                </div>
+                <br>
+                <button type="button" onclick="verificarFase2()">Avançar</button>
+            </div>
+
+            <div id="captcha-fase3" class="etapa-captcha">
+                <p><strong>Fase 3/3:</strong> O painel do elevador pifou. Pressione os terminais em branco na seguinte ordem técnica: Superior Direito, Central, Inferior Esquerdo e Central Direito. Um erro zera o painel.</p>
+                <div id="grid-botoes">
+                    </div>
+                <br>
+                <button type="button" onclick="verificarFase3()">Desbloquear Formulário</button>
+            </div>
+        </div>
+
+        <div id="container-form-principal">
+            <div id="form-bloqueado-overlay">FORMULÁRIO RETIDO - CONCLUA A TRIAGEM ACIMA</div>
+            
+            <p><strong>Formulário de Pré-Requerimento de Análise de Cadastro (FPRAC-09)</strong></p>
+            <p style="color: #e6b3b3;">* Campos obrigatórios (A falta de preenchimento gerará indeferimento sumário).</p>
+
+            <form id="form-governo" onsubmit="return false;">
+                <table>
+                    <tr>
+                        <td class="label-bg">Nº do CPF do Titular:</td>
+                        <td><input type="text" id="cpf" maxlength="11" size="15"></td>
+                    </tr>
+                    <tr>
+                        <td class="label-bg">Unidade Federativa (UF):</td>
+                        <td>
+                            <select id="uf">
+                                <option value="">-- SELECIONE --</option>
+                                <option value="AC">Acre</option>
+                                <option value="TO">Tocantins</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="DF">Distrito Federal</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-bg">Data de Nascimento:</td>
+                        <td><input type="text" id="data-nascimento" size="10" placeholder="DD/MM/AAAA" maxlength="10"></td>
+                    </tr>
+                    <tr>
+                        <td class="label-bg">Nome de Solteira da Avó Paterna:</td>
+                        <td><input type="text" id="avo" size="30"> <br><span class="destaque-inutil">(Se não tiver, invente, o sistema não aceita campo vazio).</span></td>
+                    </tr>
+                    <tr>
+                        <td class="label-bg">Cor da Capa do Processo Físico:</td>
+                        <td>
+                            <select id="cor-processo">
+                                <option value="">-- OBRIGATÓRIO --</option>
+                                <option value="pardo">Papel Pardo (Falta no almoxarifado)</option>
+                                <option value="azul">Azul (Exclusivo para Diretoria)</option>
+                                <option value="rosa">Rosa (Apenas às terças-feiras)</option>
+                                <option value="verde">Verde</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-bg">Justificativa do Pedido:</td>
+                        <td>
+                            <textarea id="justificativa" rows="3" cols="40"></textarea>
+                            <br><span class="destaque-inutil">(O sistema NÃO possui contador automático. Aja conforme a norma).</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-bg">Termo de Responsabilidade:</td>
+                        <td>
+                            <input type="checkbox" id="termo1"> Declaro que li a <a href="#" onclick="alert('Erro 404: Portaria revogada, mas ainda exigida.')" style="color:#d3d3d3;">Portaria Normativa nº 12.443/2002</a>.<br>
+                            <input type="checkbox" id="termo2"> Juro por escrito que entreguei a Foto 3x4 (fundo branco) no Balcão 4.<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-bg">Validação Humana (Decreto 8.539/15):</td>
+                        <td>Para fins de autenticação digital, decodifique a seguinte chave Base64 (maiúsculas):<br>
+                            <strong>QkFMQ0FP</strong> <br>
+                            <input type="text" id="captcha" size="15" placeholder="Insira o texto puro">
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="botoes">
+                    <button type="button" onclick="limparTudo()">Limpar Formulário</button>
+                    <button type="button" onclick="alert('Retorno de tela não autorizado pelo supervisor.')">Retornar à Tela Anterior</button>
+                    <button type="button" onclick="validarBurocracia()">Protocolar Requerimento</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="transparencia">
+            <h3>Portal de Transparência de Protocolos (Acesso Público restrito)</h3>
+            <button onclick="carregarRegistros()">Atualizar Diário Oficial</button>
+            <button onclick="apagarTudo()" style="color: #e6b3b3;">Excluir Base do Datacenter</button>
+            <ul id="lista-registros">
+                <li>Nenhum dado carregado na memória RAM.</li>
+            </ul>
+        </div>
+
+        <div class="nota-rodape">
+            Resolução nº 45.981/1998. Melhor visualizado no Internet Explorer 5.5 em resolução 800x600.
+        </div>
+    </div>
+
+    <div id="erro-escondido"></div>
+
+    <div id="modal-carregando">
+        Aguarde. Processando no mainframe central...<br>
+        <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpCQkCH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MxFZ2noGSeo1RBhA0D81yCq1AMxPAl1zB83L1N2Xb4yA2CAuAowmgEAAA7" alt="loading" style="margin-top: 10px;">
+    </div>
+
+    <script>
+        // ================= LÓGICA DOS 3 CAPTCHAS INICIAIS =================
+
+        // Fase 1: Canvas Distorcido
+        const canvas = document.getElementById('canvas-captcha');
+        const ctx = canvas.getContext('2d');
+        const codigoFase1 = "W9xQ2";
+
+        function desenharCaptcha() {
+            ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, 150, 50);
+            ctx.font = "italic 24px Courier"; ctx.fillStyle = "#e0e0e0";
+            ctx.fillText(codigoFase1, 30, 35);
+            // Ruído por cima pra dificultar
+            for(let i=0; i<15; i++) {
+                ctx.beginPath(); ctx.moveTo(Math.random()*150, Math.random()*50);
+                ctx.lineTo(Math.random()*150, Math.random()*50);
+                ctx.strokeStyle = "#eee"; ctx.stroke();
+            }
+        }
+        desenharCaptcha();
+
+        function verificarFase1() {
+            if(document.getElementById('input-cap1').value === codigoFase1) {
+                document.getElementById('captcha-fase1').classList.remove('ativa');
+                document.getElementById('captcha-fase2').classList.add('ativa');
+                mostrarErro("");
+            } else {
+                mostrarErro("Fase 1: Transcrição inválida.");
+                document.getElementById('input-cap1').value = "";
+            }
+        }
+
+        // Fase 2: Drag and Drop
+        function allowDrop(ev) { ev.preventDefault(); }
+        function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            // Só deixa soltar se for na dropzone (não soltar um dentro do outro)
+            if(ev.target.className === "dropzone" && ev.target.children.length === 0) {
+                ev.target.appendChild(document.getElementById(data));
+            }
+        }
+
+        function verificarFase2() {
+            const caixaX = document.getElementById('drop-x');
+            const caixaSN = document.getElementById('drop-sn');
+            const caixaA = document.getElementById('drop-a');
+
+            // Validação propositalmente confusa baseada no ID dos itens arrastados
+            if(caixaX.children[0]?.id === "proc-b" && 
+               caixaSN.children[0]?.id === "proc-c" && 
+               caixaA.children[0]?.id === "proc-a") {
+                
+                document.getElementById('captcha-fase2').classList.remove('ativa');
+                document.getElementById('captcha-fase3').classList.add('ativa');
+                mostrarErro("");
+            } else {
+                mostrarErro("Fase 2: Processos alocados na gaveta errada. Arquivo rejeitado.");
+            }
+        }
+
+        // Fase 3: Sequência do Painel (Botões invisíveis/idênticos)
+        const grid = document.getElementById('grid-botoes');
+        const sequenciaCerta = [2, 4, 6, 5]; // SupDir(2), Cent(4), InfEsq(6), CentDir(5) em grid 3x3 (0 a 8)
+        let sequenciaUsuario = [];
+
+        for(let i=0; i<9; i++) {
+            let btn = document.createElement('button');
+            btn.className = "btn-seq";
+            btn.innerText = i; // Texto invisível pelo CSS
+            btn.onclick = () => {
+                sequenciaUsuario.push(i);
+                btn.style.backgroundColor = "#e8e8e8"; // Feedback minúsculo
+                
+                // Se o usuário já clicou 4 vezes, confere
+                if(sequenciaUsuario.length === 4) {
+                    setTimeout(() => {
+                        let ok = true;
+                        for(let j=0; j<4; j++) { if(sequenciaUsuario[j] !== sequenciaCerta[j]) ok = false; }
+                        
+                        if(ok) {
+                            btn.style.backgroundColor = "#d0f0d0"; // Sucesso
+                            mostrarErro("");
+                        } else {
+                            mostrarErro("Fase 3: Sequência do painel incorreta. Sistema reiniciado.");
+                            sequenciaUsuario = [];
+                            document.querySelectorAll('.btn-seq').forEach(b => b.style.backgroundColor = "#f9f9f9");
+                        }
+                    }, 200);
+                }
+            };
+            grid.appendChild(btn);
+        }
+
+        function verificarFase3() {
+            let ok = true;
+            if(sequenciaUsuario.length !== 4) ok = false;
+            for(let j=0; j<4; j++) { if(sequenciaUsuario[j] !== sequenciaCerta[j]) ok = false; }
+
+            if(ok) {
+                // SUCESSO! DESBLOQUEIA O FORMULÁRIO PRINCIPAL
+                document.getElementById('form-bloqueado-overlay').style.display = 'none';
+                document.getElementById('area-captchas').style.display = 'none';
+                mostrarErro("");
+                tempoInicio = Date.now(); // Reseta o tempo só agora que liberou
+            } else {
+                mostrarErro("Fase 3: Complete a sequência antes de desbloquear.");
+            }
+        }
+
+        // ================= EVENTOS IRRITANTES DO FORMULÁRIO (TEM CERTEZA?) =================
+        const cpfInput = document.getElementById('cpf');
+        const dataNascInput = document.getElementById('data-nascimento');
+
+        cpfInput.addEventListener('input', (e) => {
+            if (e.inputType !== 'deleteContentBackward' && e.target.value.length > 0) {
+                if (!confirm("Tem certeza que esse número pertence ao seu CPF?")) {
+                    e.target.value = e.target.value.slice(0, -1);
+                }
+            }
+        });
+
+        dataNascInput.addEventListener('input', (e) => {
+            if (e.inputType !== 'deleteContentBackward' && e.target.value.length > 0) {
+                let msg = "Tem certeza?";
+                const len = e.target.value.replace(/\D/g, '').length;
+                if (len <= 2) msg = "Deseja confirmar o dia?";
+                else if (len <= 4) msg = "Você realmente nasceu nesse mês?";
+                else msg = "Tem certeza sobre este ano?";
+
+                if (!confirm(msg)) e.target.value = e.target.value.slice(0, -1);
+            }
+        });
+
+        // ================= CONFIGURAÇÃO DO BANCO E TIMEOUT =================
+        let db;
+        let tentativas = 0;
+        let tempoInicio = Date.now();
+
+        const requestDB = indexedDB.open('SistemaBurocraticoDB', 2); 
+        requestDB.onupgradeneeded = (e) => {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains('requerimentos')) {
+                db.createObjectStore('requerimentos', { keyPath: 'protocolo' });
+            }
+        };
+        requestDB.onsuccess = (e) => { db = e.target.result; carregarRegistros(); };
+
+        let tempoSessao = 180; // Aumentei um pouco porque os captchas demoram
+        setInterval(() => {
+            tempoSessao--;
+            if(tempoSessao <= 0 && document.body.innerHTML.indexOf("SISTEMA INDISPONÍVEL") === -1) {
+                document.getElementById('erro-escondido').innerText = ""; 
+                alert("Sessão Expirada. Erro SESS-9002.");
+                document.body.innerHTML = "<h2 style='text-align:center; margin-top:50px; color:#c0c0c0;'>SISTEMA INDISPONÍVEL - SESSÃO ENCERRADA</h2>";
+            }
+        }, 1000);
+
+        function mostrarErro(mensagem) { document.getElementById('erro-escondido').innerText = mensagem; }
+
+        function limparTudo() {
+            if(confirm("Deseja realmente apagar todos os dados que você demorou para digitar?")) {
+                document.getElementById('form-governo').reset();
+                mostrarErro("");
+            }
+        }
+
+        // ================= VALIDAÇÃO FINAL E SALVAMENTO =================
+        function validarBurocracia() {
+            tentativas++; 
+            mostrarErro(""); 
+            
+            const cpf = document.getElementById('cpf').value;
+            const uf = document.getElementById('uf').value;
+            const dataNasc = document.getElementById('data-nascimento').value;
+            const avo = document.getElementById('avo').value;
+            const corProcesso = document.getElementById('cor-processo').value;
+            const justificativa = document.getElementById('justificativa').value;
+            const termo1 = document.getElementById('termo1').checked;
+            const termo2 = document.getElementById('termo2').checked;
+            const captcha = document.getElementById('captcha').value;
+
+            if(cpf.length === 0 || dataNasc.length === 0) { mostrarErro("Erro 0x8891A: Campo obrigatório não preenchido."); return; }
+            if(uf === "") { mostrarErro("Por favor, selecione uma UF válida."); return; }
+            if(avo.trim().length < 3) { mostrarErro("Nome de Solteira da Avó Paterna inválido."); return; }
+            if(corProcesso !== "verde") { mostrarErro("A cor do processo não é permitida para seu nível hierárquico."); return; }
+            if(justificativa.length < 50) { mostrarErro("Caracteres insuficientes."); return; }
+            if(!termo1 || !termo2) { mostrarErro("Obrigatório aceitar termos e confirmar entrega física."); return; }
+            if(captcha !== "BALCAO") { 
+                mostrarErro("Falha na autenticação criptográfica.");
+                document.getElementById('captcha').value = ""; return; 
+            }
+
+            document.getElementById('modal-carregando').style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('modal-carregando').style.display = 'none';
+                salvarNoBanco(cpf, uf, dataNasc, avo);
+            }, 4000); 
+        }
+
+        function salvarNoBanco(cpf, uf, dataNasc, avo) {
+            const tempoGasto = Math.floor((Date.now() - tempoInicio) / 1000);
+            const registro = {
+                protocolo: Date.now(),
+                cpf: cpf, uf: uf, dataNascimento: dataNasc, avo: avo,
+                tentativas: tentativas, tempoGastoSegundos: tempoGasto,
+                dataInclusao: new Date().toLocaleString()
+            };
+
+            const tx = db.transaction('requerimentos', 'readwrite');
+            const store = tx.objectStore('requerimentos');
+            store.add(registro);
+
+            tx.oncomplete = () => {
+                alert(`Sucesso Parcial. Protocolo gerado: ${registro.protocolo}. Por favor, imprima esta tela, assine em três vias e reconheça firma em cartório.`);
+                document.getElementById('form-governo').reset();
+                tentativas = 0; tempoInicio = Date.now(); tempoSessao = 180; 
+                carregarRegistros();
+            };
+            tx.onerror = () => { mostrarErro("Erro ao gravar no Datacenter (Carimbo digital sem tinta)."); };
+        }
+
+        function carregarRegistros() {
+            if(!db) return;
+            const lista = document.getElementById('lista-registros');
+            lista.innerHTML = '';
+            const tx = db.transaction('requerimentos', 'readonly');
+            const store = tx.objectStore('requerimentos');
+            const request = store.getAll();
+
+            request.onsuccess = () => {
+                const dados = request.result;
+                if(dados.length === 0) { lista.innerHTML = '<li>Nenhum requerimento protocolado no momento.</li>'; return; }
+                dados.forEach(req => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Prot:</strong> ${req.protocolo} | <strong>CPF:</strong> ${req.cpf} | <strong>UF:</strong> ${req.uf} <br>
+                    <span style='font-size: 10px; color: #d3d3d3;'>Avó Paterna: ${req.avo} | Tentativas: ${req.tentativas} | Tempo: ${req.tempoGastoSegundos}s | Registrado: ${req.dataInclusao}</span>`;
+                    lista.appendChild(li);
+                });
+            };
+        }
+
+        function apagarTudo() {
+            if(!confirm("Atenção Servidor: Deseja realizar um DROP TABLE na base de requerimentos? Esta ação é irreversível e exige memorando prévio.")) return;
+            const tx = db.transaction('requerimentos', 'readwrite');
+            const store = tx.objectStore('requerimentos');
+            store.clear();
+            tx.oncomplete = () => {
+                alert("Base de dados limpa com sucesso. Todos os requerimentos foram incinerados.");
+                carregarRegistros();
+            };
+        }
+    </script>
+</body>
+</html>
