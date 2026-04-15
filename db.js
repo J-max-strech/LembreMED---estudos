@@ -91,3 +91,21 @@ async function deletarItem(tabela, id) {
         request.onerror = () => reject(request.error);
     });
 }
+
+/**
+ * Atualiza um item em uma tabela (ou adiciona se não existir).
+ * @param {string} tabela Nome da store.
+ * @param {object} item Objeto com ID para atualizar.
+ * @returns {Promise<boolean>} Sucesso da operação.
+ */
+async function atualizarItem(tabela, item) {
+    if (!db) await iniciarBanco();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction([tabela], "readwrite");
+        const store = transaction.objectStore(tabela);
+        const request = store.put(item);
+
+        request.onsuccess = () => resolve(true);
+        request.onerror = () => reject(request.error);
+    });
+}

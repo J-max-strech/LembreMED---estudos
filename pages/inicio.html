@@ -13,13 +13,10 @@
     <div class="app-layout">
         <!-- Fixed Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <a href="inicio.html" class="sidebar-logo">
-                    <div class="sidebar-logo-icon">
-                        <i data-lucide="pill"></i>
-                    </div>
-                    <span>LembreMED</span>
-                </a>
+            <div class="sidebar-header" style="justify-content: center; padding: 2rem 0;">
+                <div class="menu-icon-wrapper" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: var(--primary);">
+                    <i data-lucide="menu"></i>
+                </div>
             </div>
             
             <nav class="sidebar-nav">
@@ -96,21 +93,31 @@
                         <p style="margin-top: 1.5rem; font-weight: 700; color: var(--text-main); font-size: 1rem;">Doses confirmadas hoje</p>
                     </div>
 
-                    <!-- Next Doses Card -->
+                    <!-- Doses do Dia -->
                     <div id="caregiverNextDose" class="card" style="padding: 2.5rem;">
-                        <!-- Populated by JS -->
+                        <div class="card-title">
+                            <h3>Doses do Dia</h3>
+                        </div>
+                        <div id="dosesDoDiaList" class="med-list">
+                            <!-- Populated by JS -->
+                            <p style="text-align: center; padding: 2rem; color: var(--text-sub);">Carregando doses...</p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Summary Stats -->
-                <div class="stats-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2.5rem;">
+                <div class="stats-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2.5rem;">
                     <div class="card stat-card">
-                        <span class="stat-label">Total de Doses Agendadas</span>
-                        <span class="stat-value" id="statDoses">0</span>
+                        <span class="stat-label">Doses Tomadas</span>
+                        <span class="stat-value" id="statTaken" style="color: var(--primary);">0</span>
                     </div>
                     <div class="card stat-card">
-                        <span class="stat-label" style="color: var(--alert);">Doses Pendentes</span>
-                        <span class="stat-value" id="statDelays" style="color: var(--alert);">0</span>
+                        <span class="stat-label">Doses Pendentes</span>
+                        <span class="stat-value" id="statPending" style="color: #f59e0b;">0</span>
+                    </div>
+                    <div class="card stat-card">
+                        <span class="stat-label">Doses Perdidas</span>
+                        <span class="stat-value" id="statMissed" style="color: #ef4444;">0</span>
                     </div>
                 </div>
 
@@ -123,7 +130,7 @@
                     </a>
                 </div>
                 
-                <div id="patientListContainer" class="patient-grid" style="margin-top: 2rem;">
+                <div id="patientListContainer" class="dashboard-grid" style="margin-top: 2rem;">
                     <!-- Populated by JS -->
                 </div>
             </main>
@@ -131,18 +138,25 @@
     </div>
 
     <!-- Modals -->
+    <div id="successModal" class="modal-overlay">
+        <div class="alert-card success">
+            <span class="alert-card-icon">✅</span>
+            <h3 class="alert-card-title">Sucesso!</h3>
+            <p class="alert-card-message">Ação realizada com êxito.</p>
+            <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('successModal')">Continuar</button>
+        </div>
+    </div>
+
     <div id="patientDetailsModal" class="modal-overlay">
-        <div class="modal" style="max-width: 700px; width: 90%;">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
-                <h2 id="detName" style="margin: 0;">Detalhes do Paciente</h2>
-                <button class="close-modal" onclick="closeModal('patientDetailsModal')" style="background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-sub);">
-                    <i data-lucide="x"></i>
-                </button>
+        <div class="modal" style="max-width: 600px;">
+            <button class="close-modal" onclick="closeModal('patientDetailsModal')">&times;</button>
+            <div class="modal-header">
+                <h2 id="detName">Detalhes do Paciente</h2>
             </div>
-            <div id="patientDetailsContent"></div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem;">
-                <button class="btn btn-outline" onclick="closeModal('patientDetailsModal')">Fechar Janela</button>
-                <button id="btnDeletePatient" class="btn" style="background: #fee2e2; color: #ef4444;">Excluir Registro</button>
+            <div id="patientDetailsContent" style="margin-top: 1rem;"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem;">
+                <button class="btn btn-outline" onclick="closeModal('patientDetailsModal')">Fechar</button>
+                <button id="btnDeletePatient" class="btn" style="background: #fee2e2; color: #ef4444; border: none;">Excluir Paciente</button>
             </div>
         </div>
     </div>
@@ -162,7 +176,9 @@
     </div>
 
     <div id="notificationContainer" class="notification-container"></div>
+    <script src="../db.js"></script>
     <script src="../js/script.js"></script>
+    <script src="../controller.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') lucide.createIcons();

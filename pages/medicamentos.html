@@ -28,8 +28,8 @@
                     <span>Dashboard</span>
                 </a>
                 <a href="medicamentos.html" class="sidebar-item active">
-                    <i data-lucide="calendar-check"></i>
-                    <span>Meus Remédios</span>
+                    <i data-lucide="pill"></i>
+                    <span>Medicamentos</span>
                 </a>
                 <a href="pacientes.html" class="sidebar-item">
                     <i data-lucide="users"></i>
@@ -72,7 +72,7 @@
 
             <main class="content-body animate-up">
                 <header style="margin-bottom: 3rem;">
-                    <h1 style="font-size: 2.25rem;">Meus Medicamentos</h1>
+                    <h1 style="font-size: 2.25rem;">Medicamentos</h1>
                     <p>Gerencie todos os remédios e horários dos seus pacientes.</p>
                 </header>
 
@@ -81,14 +81,9 @@
                         <form id="medFormCaregiver">
                             <div class="form-group">
                                 <label for="mPatient">Vincular ao Paciente</label>
-                                <div class="custom-select-wrapper" id="patientSelectWrapper">
-                                    <div class="custom-select-trigger">
-                                        <span id="selectedPatientText">Selecione um paciente</span>
-                                        <div class="arrow"></div>
-                                    </div>
-                                    <div class="custom-options" id="patientOptionsContainer"></div>
-                                    <input type="hidden" id="mPatient" required>
-                                </div>
+                                <select id="mPatient" class="form-control" required>
+                                    <option value="" disabled selected>Carregando pacientes...</option>
+                                </select>
                             </div>
                             <div class="grid-opcoes" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                                 <div class="form-group">
@@ -109,16 +104,14 @@
                                     <label for="mFreq">Frequência</label>
                                     <select id="mFreq" class="form-control" required>
                                         <option value="Diário">Diário</option>
-                                        <option value="Uma vez por semana">Uma vez por semana</option>
                                         <option value="2x ao dia (12/12h)">2x ao dia (12/12h)</option>
                                         <option value="3x ao dia (8/8h)">3x ao dia (8/8h)</option>
                                         <option value="4x ao dia (6/6h)">4x ao dia (6/6h)</option>
-                                        <option value="Dia sim, dia não">Dia sim, dia não</option>
                                         <option value="Somente se houver dor">Somente se houver dor</option>
                                     </select>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-large">Cadastrar Medicamento</button>
+                            <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">Cadastrar Medicamento</button>
                         </form>
                     </div>
                     <div class="card" style="margin-top: 2rem;">
@@ -131,9 +124,32 @@
             </div>
         </div>
 
+    <div id="successModal" class="modal-overlay">
+        <div class="alert-card success">
+            <span class="alert-card-icon">✅</span>
+            <h3 class="alert-card-title">Sucesso!</h3>
+            <p class="alert-card-message">Ação realizada com êxito.</p>
+            <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('successModal')">Continuar</button>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal" style="max-width: 450px; text-align: center; padding: 3.5rem;">
+            <div style="width: 80px; height: 80px; background: #fee2e2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; font-size: 2.5rem;">
+                <i data-lucide="alert-triangle"></i>
+            </div>
+            <h3 id="confirmTitle" style="font-size: 1.75rem; margin-bottom: 1rem;">Tem certeza?</h3>
+            <p id="confirmMessage" style="margin-bottom: 2.5rem; font-size: 1rem;">Esta ação é permanente e removerá os dados selecionados.</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <button class="btn btn-outline" onclick="closeModal('confirmModal')">Cancelar</button>
+                <button id="btnConfirmAction" class="btn btn-primary" style="background: #ef4444;">Sim, Excluir</button>
+            </div>
+        </div>
+    </div>
+
     <div id="notificationContainer" class="notification-container"></div>
-    <script src="../js/script.js"></script>
     <script src="../db.js"></script>
+    <script src="../js/script.js"></script>
     <script src="../controller.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

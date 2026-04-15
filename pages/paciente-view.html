@@ -6,30 +6,20 @@
     <title>Minha Rotina - LembreMED</title>
     <link rel="stylesheet" href="../css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .section-content { display: none; }
         .section-content.active { display: block; animation: fadeIn 0.5s ease; }
-        
-        /* Local overrides for buttons in sidebar */
-        .sidebar-nav button.sidebar-item {
-            width: 100%;
-            border: none;
-            background: none;
-            cursor: pointer;
-            text-align: left;
-            font-family: inherit;
-        }
     </style>
 </head>
 <body>
     <div class="app-layout">
-        <!-- Fixed Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <a href="paciente-view.html" class="sidebar-logo">
-                    <div class="sidebar-logo-icon">L</div>
+                    <div class="sidebar-logo-icon">
+                        <i data-lucide="pill"></i>
+                    </div>
                     <span>LembreMED</span>
                 </a>
             </div>
@@ -40,8 +30,8 @@
                     <span>Início</span>
                 </button>
                 <button class="sidebar-item sub-nav-btn" onclick="showSection('medicamentos', this)">
-                    <i data-lucide="pill"></i>
-                    <span>Medicamentos</span>
+                    <i data-lucide="calendar-check"></i>
+                    <span>Meus Remédios</span>
                 </button>
                 <button class="sidebar-item sub-nav-btn" onclick="showSection('doencas', this)">
                     <i data-lucide="activity"></i>
@@ -49,35 +39,31 @@
                 </button>
                 <button class="sidebar-item sub-nav-btn" onclick="showSection('historico', this)">
                     <i data-lucide="history"></i>
-                    <span>Meu Histórico</span>
+                    <span>Histórico</span>
                 </button>
                 <button class="sidebar-item sub-nav-btn" onclick="showSection('configuracoes', this)">
                     <i data-lucide="settings"></i>
-                    <span>Ajustes</span>
+                    <span>Configurações</span>
                 </button>
             </nav>
 
             <div class="sidebar-footer">
-                <button onclick="logout()" class="btn btn-outline" style="width: 100%; justify-content: flex-start; border: none; padding: 1rem 1.5rem; background: transparent;">
+                <button onclick="logout()" class="sidebar-item" style="background: transparent;">
                     <i data-lucide="log-out"></i>
-                    Sair
+                    <span>Sair</span>
                 </button>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
         <div class="main-content">
             <header class="top-bar">
                 <button class="mobile-toggle" onclick="toggleSidebar()">
                     <i data-lucide="menu"></i>
                 </button>
-                <div class="user-info" style="display: flex; align-items: center; gap: 1rem;">
+                <div class="user-info">
                     <div style="text-align: right;">
-                        <span id="userNameDisplay" style="display: block; font-weight: 700; font-size: 0.95rem;">Olá, Paciente</span>
+                        <span id="userNameDisplay" style="display: block; font-weight: 700;">Olá, Paciente</span>
                         <span style="font-size: 0.75rem; color: var(--text-sub); font-weight: 600;">Modo Paciente</span>
-                    </div>
-                    <div class="user-avatar" style="width: 48px; height: 48px; background: #dcfce7; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #16a34a; font-weight: 800; border: 2px solid white; box-shadow: var(--shadow-sm);">
-                        P
                     </div>
                 </div>
             </header>
@@ -85,67 +71,47 @@
             <main class="content-body animate-up">
                 <!-- Seção: Início -->
                 <section id="section-inicio" class="section-content active">
-                    <header style="margin-bottom: 3rem;">
-                        <h1 style="font-size: 2.25rem;">Olá! Como você está hoje?</h1>
-                        <p>Aqui está o que você precisa tomar agora.</p>
+                    <header style="margin-bottom: 2rem;">
+                        <h1 style="font-size: 2.25rem;">Minha Saúde Hoje</h1>
+                        <p>Acompanhe suas doses e mantenha o foco.</p>
                     </header>
 
                     <div class="dashboard-grid">
                         <div class="card chart-container">
-                            <div class="card-title" style="width: 100%;">
-                                <h3 style="font-size: 1.2rem;">Minha Adesão</h3>
-                            </div>
+                            <h3>Minha Adesão</h3>
                             <svg viewBox="0 0 36 36" class="circular-chart">
-                                <defs>
-                                    <linearGradient id="pGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#22c55e" />
-                                        <stop offset="100%" stop-color="#16a34a" />
-                                    </linearGradient>
-                                </defs>
                                 <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                 <path id="patientAdherenceCircle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                 <text x="18" y="20.35" class="percentage" id="patientAdherenceText">0%</text>
                             </svg>
-                            <p style="margin-top: 1.5rem; font-weight: 700; color: var(--text-main);">Doses concluídas hoje</p>
                         </div>
-                        <div id="nextDoseContainer"></div>
-                    </div>
-
-                    <div class="card" id="upcomingMedsCard" style="display: none; margin-top: 2rem; padding: 2.5rem;">
-                        <div class="card-title">
-                            <h3>Próximas Doses</h3>
-                        </div>
-                        <div id="upcomingMedsList" class="med-list"></div>
+                        <div id="nextDoseContainer" style="display: grid; gap: 1rem;"></div>
                     </div>
                 </section>
 
-                <!-- Seção: Meus Medicamentos -->
+                <!-- Seção: Medicamentos -->
                 <section id="section-medicamentos" class="section-content">
                     <div class="card">
                         <div class="card-title">
                             <h3>Meus Medicamentos</h3>
-                            <button class="btn btn-primary" onclick="openAddMedModal()">
-                                <i data-lucide="plus-circle"></i>
-                                Novo Remédio
+                            <button class="btn btn-primary" onclick="document.querySelector('#medPatientModal h2').innerText = 'Novo Medicamento'; openModal('medPatientModal')">
+                                <i data-lucide="plus-circle"></i> Novo Medicamento
                             </button>
                         </div>
-                        <p style="margin-bottom: 2.5rem;">Gerencie todos os medicamentos cadastrados na sua rotina.</p>
-                        <div id="medListContainer" class="med-list"></div>
+                        <div id="medListContainer"></div>
                     </div>
                 </section>
 
-                <!-- Seção: Minhas Doenças -->
+                <!-- Seção: Doenças -->
                 <section id="section-doencas" class="section-content">
                     <div class="card">
                         <div class="card-title">
-                            <h3>Condições de Saúde</h3>
-                            <button class="btn btn-primary" onclick="openAddDiseaseModal()">
-                                <i data-lucide="plus-circle"></i>
-                                Adicionar
+                            <h3>Minhas Condições</h3>
+                            <button class="btn btn-primary" onclick="document.querySelector('#diseaseModal h2').innerText = 'Adicionar Condição'; openModal('diseaseModal')">
+                                <i data-lucide="plus-circle"></i> Adicionar
                             </button>
                         </div>
-                        <p style="margin-bottom: 2.5rem;">Registro de doenças ou sintomas monitorados.</p>
-                        <div id="diseaseListContainer" class="med-list"></div>
+                        <div id="diseaseListContainer"></div>
                     </div>
                 </section>
 
@@ -153,38 +119,35 @@
                 <section id="section-historico" class="section-content">
                     <div class="card">
                         <div class="card-title">
-                            <h3>Registro de Atividades</h3>
+                            <h3>Meu Histórico</h3>
                         </div>
-                        <p style="margin-bottom: 2.5rem;">Log completo das doses tomadas nos últimos dias.</p>
-                        <div id="patientHistoryContainer" class="history-list"></div>
+                        <div id="patientHistoryContainer"></div>
                     </div>
                 </section>
 
                 <!-- Seção: Ajustes -->
                 <section id="section-configuracoes" class="section-content">
-                    <header style="margin-bottom: 3rem;">
-                        <h1 style="font-size: 2.25rem;">Ajustes</h1>
-                        <p>Personalize sua experiência no LembreMED.</p>
-                    </header>
-
-                    <div class="dashboard-grid">
+                    <div style="display: grid; gap: 2rem;">
                         <div class="card">
                             <div class="card-title">
-                                <h3>Seu Perfil</h3>
+                                <h3><i data-lucide="user"></i> Perfil do Usuário</h3>
                             </div>
-                            <div class="form-group" style="margin-bottom: 1.5rem;">
-                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Seu Nome</label>
-                                <input type="text" id="patientConfigName" class="form-control" placeholder="Como quer ser chamado">
+                            <div class="form-group">
+                                <label>Nome Completo</label>
+                                <input type="text" id="configName" class="form-control" placeholder="Seu nome">
                             </div>
-                            <button class="btn btn-primary" onclick="savePatientProfileConfig()">Salvar Nome</button>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="email" id="configEmail" class="form-control" placeholder="seu@email.com">
+                            </div>
                         </div>
 
                         <div class="card">
                             <div class="card-title">
-                                <h3>Preferências</h3>
+                                <h3><i data-lucide="sliders"></i> Preferências do Sistema</h3>
                             </div>
                             <div class="form-group">
-                                <label style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Tamanho da Letra</label>
+                                <label>Tamanho da Fonte</label>
                                 <select id="fontSizeSelect" class="form-control" onchange="updateFontSize(this.value)">
                                     <option value="normal">Normal</option>
                                     <option value="large">Grande</option>
@@ -192,122 +155,162 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 12px; border: 1px solid var(--border);">
-                                    <label style="margin: 0; font-size: 1rem;">Som de Alerta</label>
-                                    <label class="switch">
-                                        <input type="checkbox" id="soundNotif" checked onchange="saveSoundPref(this.checked)">
-                                        <span class="slider"></span>
-                                    </label>
+                                <label>Notificações</label>
+                                <div style="display: flex; gap: 1rem; align-items: center;">
+                                    <input type="checkbox" checked style="width: 20px; height: 20px;">
+                                    <span>Ativar lembretes sonoros</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card" style="border-color: #fee2e2; margin-top: 2rem;">
-                        <div class="card-title">
-                            <h3 style="color: var(--alert);">Zona Crítica</h3>
-                        </div>
-                        <p style="margin-bottom: 1.5rem;">Apagar todos os seus medicamentos e histórico salvos neste dispositivo.</p>
-                        <button class="btn btn-outline" style="color: var(--alert); border-color: #fee2e2;" onclick="clearAllData()">Limpar Meus Dados</button>
+                        <button class="btn btn-primary" onclick="saveSettings()" style="width: 100%; padding: 1.25rem;">
+                            <i data-lucide="save"></i> Salvar Alterações
+                        </button>
                     </div>
                 </section>
-                </main>
-                </div>
-                </div>
+            </main>
+        </div>
+    </div>
 
-                <!-- Modals -->
-                <!-- ... (rest of modals) ... -->
-
-                <div id="adminPasswordModal" class="modal-overlay">
-        <div class="modal" style="max-width: 450px; text-align: center; padding: 3rem;">
-            <div style="width: 80px; height: 80px; background: #fee2e2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2.5rem;">
-                <i data-lucide="shield-alert"></i>
+    <!-- Modals -->
+    <div id="medPatientModal" class="modal-overlay">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal('medPatientModal')">&times;</button>
+            <div class="modal-header">
+                <h2>Cadastrar Medicamento</h2>
             </div>
-            <h3 style="font-size: 1.75rem; margin-bottom: 1rem; color: var(--text-main);">Ação Irreversível!</h3>
-            <p style="margin-bottom: 2rem; font-size: 1rem; color: var(--text-sub);">Você está prestes a apagar <strong>TODOS</strong> os seus dados salvos. Esta ação não pode ser desfeita e todas as informações serão perdidas permanentemente.</p>
-            
-            <div class="form-group" style="text-align: left; margin-bottom: 2rem;">
-                <label style="font-weight: 700; color: var(--text-main);">Digite a Senha de Administrador</label>
-                <input type="password" id="adminPassInput" class="form-control" placeholder="••••••••••••">
-            </div>
+            <form id="medFormPatient">
+                <input type="hidden" id="medId">
+                <div class="form-group">
+                    <label>Nome do Remédio</label>
+                    <input type="text" id="medName" class="form-control" placeholder="Ex: Paracetamol" required>
+                </div>
+                <div class="form-group">
+                    <label>Dose</label>
+                    <input type="text" id="medDose" class="form-control" placeholder="Ex: 1 comprimido" required>
+                </div>
+                <div class="form-group">
+                    <label>Horário</label>
+                    <input type="time" id="medTime" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Frequência</label>
+                    <select id="medFreq" class="form-control" required>
+                        <option value="Diário">Diário</option>
+                        <option value="2x ao dia (12/12h)">2x ao dia (12/12h)</option>
+                        <option value="3x ao dia (8/8h)">3x ao dia (8/8h)</option>
+                        <option value="4x ao dia (6/6h)">4x ao dia (6/6h)</option>
+                        <option value="Somente se houver dor">Somente se houver dor</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Medicamento</button>
+            </form>
+        </div>
+    </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <button class="btn btn-outline" onclick="closeModal('adminPasswordModal')">Cancelar</button>
-                <button class="btn btn-primary btn-danger-confirm" onclick="confirmClearWithPassword()">Confirmar Limpeza</button>
+    <div id="diseaseModal" class="modal-overlay">
+        <div class="modal">
+            <button class="close-modal" onclick="closeModal('diseaseModal')">&times;</button>
+            <div class="modal-header">
+                <h2>Adicionar Condição</h2>
+            </div>
+            <form id="diseaseForm">
+                <input type="hidden" id="diseaseId">
+                <div class="form-group">
+                    <label>Nome da Doença/Sintoma</label>
+                    <input type="text" id="diseaseName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="diseaseNote" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Salvar Condição</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal-overlay">
+        <div class="alert-card success">
+            <span class="alert-card-icon">✅</span>
+            <h3 class="alert-card-title">Sucesso!</h3>
+            <p class="alert-card-message">Ação realizada com êxito.</p>
+            <button class="btn btn-primary" style="width: 100%;" onclick="closeModal('successModal')">Continuar</button>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal" style="text-align: center;">
+            <h3 id="confirmTitle">Tem certeza?</h3>
+            <p id="confirmMessage" style="margin-bottom: 2rem;"></p>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-outline" onclick="closeModal('confirmModal')" style="flex: 1;">Cancelar</button>
+                <button id="btnConfirmAction" class="btn btn-primary" style="flex: 1; background: #ef4444;">Excluir</button>
             </div>
         </div>
     </div>
 
-    <div id="notificationContainer" class="notification-container"></div>
-                <script src="../js/script.js"></script>
-                <script src="../db.js"></script>
-                <script src="../controller.js"></script>
-                <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-                renderPatientMeds();
+    <div id="notificationContainer"></div>
 
-                // Populate settings
-                const user = JSON.parse(localStorage.getItem('lembremed_user'));
-                if (user && document.getElementById('patientConfigName')) {
-                document.getElementById('patientConfigName').value = user.nome;
-                }
-
-                // Populate preferences
-                const fontSize = localStorage.getItem('lembremed_font_size') || 'normal';
-                if (document.getElementById('fontSizeSelect')) {
-                document.getElementById('fontSizeSelect').value = fontSize;
-                }
-
-                const soundPref = localStorage.getItem('lembremed_sound_notif') !== 'false';
-                if (document.getElementById('soundNotif')) {
-                document.getElementById('soundNotif').checked = soundPref;
-                }
-                });
-
-                function updateFontSize(size) {
-                localStorage.setItem('lembremed_font_size', size);
-                applyGlobalSettings();
-                showNotification('Fonte Atualizada', 'O tamanho da letra foi alterado.', '🔤');
-                }
-
-                function saveSoundPref(enabled) {
-                localStorage.setItem('lembremed_sound_notif', enabled);
-                showNotification('Preferência Salva', enabled ? 'Sons ativados.' : 'Sons desativados.', '🔊');
-                }
-
-                function savePatientProfileConfig() {
-                const newName = document.getElementById('patientConfigName').value;
-                const user = JSON.parse(localStorage.getItem('lembremed_user'));
-                if (user && newName) {
-                user.nome = newName;
-                localStorage.setItem('lembremed_user', JSON.stringify(user));
-                showNotification('Perfil Salvo', 'Seu nome foi atualizado.', '👤');
-                setTimeout(() => window.location.reload(), 1000);
-                }
-                }
-
-        function clearAllData() {
-            document.getElementById('adminPassInput').value = '';
-            openModal('adminPasswordModal');
+    <script src="../db.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../controller.js"></script>
+    <script>
+        function updateFontSize(size) {
+            localStorage.setItem('lembremed_font_size', size);
+            applyGlobalSettings();
+            showNotification('Fonte Atualizada', 'O tamanho da letra foi alterado.', '🔤');
         }
 
-        function confirmClearWithPassword() {
-            const pass = document.getElementById('adminPassInput').value;
+        function saveSettings() {
+            const user = JSON.parse(localStorage.getItem('lembremed_user')) || {};
+            user.nome = document.getElementById('configName').value;
+            user.email = document.getElementById('configEmail').value;
+            localStorage.setItem('lembremed_user', JSON.stringify(user));
             
-            if (pass === 'adminlembremed') {
-                localStorage.removeItem('lembremed_meds');
-                localStorage.removeItem('lembremed_history');
-                localStorage.removeItem('lembremed_diseases');
-                
-                closeModal('adminPasswordModal');
-                showNotification('Dados Removidos', 'Sua rotina foi limpa.', '🗑️');
-                
-                setTimeout(() => window.location.reload(), 1500);
-            } else {
-                showNotification('Senha Incorreta', 'Acesso negado para limpeza de dados.', '❌');
-            }
+            showSuccessModal("Ajustes Salvos", "Suas preferências foram atualizadas com sucesso.");
+            setTimeout(() => window.location.reload(), 2000);
         }
-                </script>
-                </body>
-                </html>
+
+        async function renderDiseases() {
+            const container = document.getElementById('diseaseListContainer');
+            if (!container) return;
+            const diseases = JSON.parse(localStorage.getItem('lembremed_diseases') || '[]');
+            
+            if (diseases.length === 0) {
+                container.innerHTML = '<div class="empty-state"><span class="empty-state-icon">🏥</span><p>Nenhuma condição registrada.</p></div>';
+                return;
+            }
+            container.innerHTML = diseases.map((d, index) => `
+                <div class="card-item animate-fade">
+                    <div class="card-item-info">
+                        <h4>${d.nome}</h4>
+                        <p>${d.nota || 'Sem observações'}</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-outline" style="padding: 0.5rem;" onclick="editDisease(${index})">
+                            <i data-lucide="edit-3"></i>
+                        </button>
+                        <button class="btn-remove" style="padding: 0.5rem;" onclick="removeDisease(${index})">
+                            <i data-lucide="trash-2"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function removeDisease(index) {
+            showConfirm("Excluir Doença", "Deseja remover este registro?", () => {
+                const diseases = JSON.parse(localStorage.getItem('lembremed_diseases') || '[]');
+                diseases.splice(index, 1);
+                localStorage.setItem('lembremed_diseases', JSON.stringify(diseases));
+                renderDiseases();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDiseases();
+        });
+    </script>
+</body>
+</html>
