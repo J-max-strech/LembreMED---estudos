@@ -1,10 +1,19 @@
 <?php
 
+require_once __DIR__ . '/Config/AppConfig.php';
+
 class Migration {
     public static function run() {
         try {
-            // Cria ou abre o banco de dados SQLite
-            $pdo = new PDO('sqlite:database.sqlite');
+            $config = AppConfig::load();
+            $dsn = $config->get('database_dsn');
+            $user = $config->get('database_user') ?: null;
+            $password = $config->get('database_password') ?: null;
+
+            // Cria ou abre o banco configurado.
+            $pdo = $user === null
+                ? new PDO($dsn)
+                : new PDO($dsn, $user, $password);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // SQL para criação da tabela
@@ -18,7 +27,7 @@ class Migration {
             $pdo->exec($sql);
             echo "Sucesso: Banco de dados inicializado e tabela 'alunos' pronta.\n";
         } catch (PDOException $e) {
-            die("Erro na migração: " . $e->getMessage() . "\n");
+            die("Erro na migração: verifique a configuração do banco de dados.\n");
         }
     }
 }
