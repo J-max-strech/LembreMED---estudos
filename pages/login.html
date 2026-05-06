@@ -44,6 +44,12 @@
     </div>
 
     <script>
+        const savedUser = JSON.parse(localStorage.getItem('lembremed_user'));
+
+        if (!savedUser) {
+            window.location.href = 'cadastro.html';
+        }
+
         function closeErrorModal() {
             document.getElementById('errorModal').style.display = 'none';
         }
@@ -52,7 +58,6 @@
             e.preventDefault();
             
             const email = document.getElementById('email').value;
-            const savedUser = JSON.parse(localStorage.getItem('lembremed_user'));
             
             if (savedUser && savedUser.email === email) {
                 localStorage.setItem('lembremed_logged', 'true');

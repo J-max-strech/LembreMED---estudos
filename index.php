@@ -1,29 +1,23 @@
-<?php
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>LembreMED - Carregando...</title>
+    <script>
+        const logged = localStorage.getItem('lembremed_logged');
+        const user = JSON.parse(localStorage.getItem('lembremed_user'));
 
-/**
- * Front Controller - Ponto de entrada único da aplicação.
- */
-
-require_once 'router.php';
-require_once __DIR__ . '/Config/AppConfig.php';
-require_once __DIR__ . '/Repositories/PdoAlunoRepository.php';
-require_once __DIR__ . '/service.php';
-
-$config = AppConfig::load();
-$dsn = $config->get('database_dsn');
-$user = $config->get('database_user') ?: null;
-$password = $config->get('database_password') ?: null;
-
-$pdo = $user === null
-    ? new PDO($dsn)
-    : new PDO($dsn, $user, $password);
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-$alunos = new PdoAlunoRepository($pdo);
-$matriculas = new MatriculaService($alunos);
-$controller = new MatriculaController($matriculas);
-$middleware = new Middleware();
-
-// Inicia o roteamento com dependências já montadas.
-$router = new Router($controller, $middleware);
-$router->route();
+        if (!user) {
+            window.location.href = 'pages/cadastro.html';
+        } else if (logged !== 'true') {
+            window.location.href = 'pages/login.html';
+        } else if (user.role === 'paciente') {
+            window.location.href = 'pages/paciente-view.html';
+        } else {
+            window.location.href = 'pages/inicio.html';
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
